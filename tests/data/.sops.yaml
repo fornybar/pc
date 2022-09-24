@@ -1,0 +1,5 @@
+keys:
+  - &myagekey age1gm2rny60q3qpjl38gj433wasag2nxz6rzaj6k8eu76y02pqm4s3quddkgz
+
+creation_rules:
+  - age: *myagekey
