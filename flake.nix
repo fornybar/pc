@@ -4,7 +4,7 @@
   inputs.nixpkgs.url = "nixpkgs/nixos-22.05";
   inputs.utils.inputs.nixpkgs.follows  = "nixpkgs";
 
-  outputs = { self, nixpkgs, nix, utils, ... }@inputs:
+  outputs = { self, nixpkgs, nix, sops-nix, utils, ... }@inputs:
   {
     nixosModules = import ./hardware // utils.lib.importDir ./modules;
 
