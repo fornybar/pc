@@ -11,6 +11,7 @@
   sops.defaultSopsFile = "${self}/secrets.yaml";
 
   sops.secrets = lib.mkMerge (map (name:{
+      "${name}/github-token".owner = name;
       "${name}/password".neededForUsers = true;
   }) midgardUsers);
 
