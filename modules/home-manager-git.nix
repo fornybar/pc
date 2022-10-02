@@ -1,0 +1,66 @@
+{ config, lib, mapHomeManagerUsers, ... }:
+with lib;
+
+let
+  cfg = config.midgard.pc.users;
+
+  gitOpts = { name, ...}: {
+    options.git = {
+      enable = mkOption {
+        type = types.bool;
+        default = true;
+      };
+
+      githubTokenPath = mkOption {
+        type = with types; nullOr path;
+        description = "GitHub personal token";
+      };
+    };
+
+    config = {
+      git.githubTokenPath = mkDefault (config.sops.secrets."${name}/github-token".path or null);
+    };
+  };
+
+in {
+
+  options = {
+    midgard.pc.users = mkOption {
+      type = with types; attrsOf (submodule gitOpts);
+    };
+  };
+
+  config = {
+    assertions = [
+      { 
+          assertion = ! any id (lib.mapAttrsToList (name: user: isNull user.git.githubTokenPath) cfg);
+          message = ''
+            Sops secret <user>:github.token is missing from secrets.yaml for one or more users. Set it og change
+            midgard.pc.users.<users>.git.githubTokenPath to a file with github-token.
+          '';
+      }
+    ];
+
+    home-manager.users = mapHomeManagerUsers (name: user:
+       mkIf cfg.${name}.git.enable {
+         programs = {
+           gh.enable = true;
+           gh.enableGitCredentialHelper = true;
+
+           git.enable = true;
+           git.userName = user.fullName;
+           git.userEmail = user.email;
+           git.extraConfig = {
+             init.defaultBranch = "main";
+           };
+           #git.signing.key
+           #git signing.signByDefault = true;
+         };
+
+         home.sessionVariablesExtra = ''
+           export GH_TOKEN=''$(cat ${cfg.${name}.git.githubTokenPath})
+         ''; ##${config.sops.secrets.github-token.path})
+       }
+    );
+  };
+}
