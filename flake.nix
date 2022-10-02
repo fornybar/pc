@@ -20,10 +20,10 @@
           self.nixosModules.virtualisation
           self.nixosModules.home-manager
           self.nixosModules.home-manager-git
+          self.nixosModules.home-manager-programs
         ];
       };
     };
-
 
     checks."x86_64-linux" = import ./tests inputs;
   };
