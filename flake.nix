@@ -19,6 +19,7 @@
           self.nixosModules.desktop
           self.nixosModules.virtualisation
           self.nixosModules.home-manager
+          self.nixosModules.home-manager-git
         ];
       };
     };
