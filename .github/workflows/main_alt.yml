@@ -9,7 +9,7 @@ on:
 jobs:
   build:
     #uses: nixbuild/nixbuild-action/.github/workflows/ci-workflow.yml@v14
-    uses: .github/workflows/ci-workflow.yml@main
+    uses: ./.github/workflows/ci-workflow.yml
     secrets:
       nixbuild_ssh_key: ${{ secrets.nixbuild_ssh_key }}
       access-tokens: github.com=${{ secrets.SVADIL_TOKEN }}
