@@ -21,6 +21,7 @@
           self.nixosModules.home-manager
           self.nixosModules.home-manager-git
           self.nixosModules.home-manager-programs
+          self.nixosModules.nixbuild
         ];
       };
     };
