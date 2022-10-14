@@ -26,6 +26,7 @@
           self.nixosModules.nixpkgs
           self.nixosModules.teams
           self.nixosModules.systemPackages
+          self.nixosModules.services
         ];
       };
     };
