@@ -23,6 +23,7 @@
           self.nixosModules.home-manager-programs
           self.nixosModules.nixbuild
           self.nixosModules.boot
+          self.nixosModules.nixpkgs
         ];
       };
     };
