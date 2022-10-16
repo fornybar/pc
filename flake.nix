@@ -27,6 +27,7 @@
           self.nixosModules.teams
           self.nixosModules.systemPackages
           self.nixosModules.services
+          self.nixosModules.networking
         ];
       };
     };
