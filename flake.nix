@@ -28,6 +28,7 @@
           self.nixosModules.systemPackages
           self.nixosModules.services
           self.nixosModules.networking
+          self.nixosModules.local
         ];
       };
     };
