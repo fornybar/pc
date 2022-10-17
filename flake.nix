@@ -24,6 +24,7 @@
           self.nixosModules.nixbuild
           self.nixosModules.boot
           self.nixosModules.nixpkgs
+          self.nixosModules.teams
         ];
       };
     };
