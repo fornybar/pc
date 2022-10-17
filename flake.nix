@@ -29,6 +29,7 @@
           self.nixosModules.services
           self.nixosModules.networking
           self.nixosModules.local
+          self.nixosModules.nix-access-tokens
         ];
       };
     };
