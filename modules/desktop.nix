@@ -1,4 +1,4 @@
-{ config, lib, ...}: 
+{ config, pkgs, lib, ...}:
 with lib;
 let
   cfg = config.midgard.pc;
@@ -21,6 +21,12 @@ in {
           displayManager.gdm.enable = true;
           displayManager.gdm.wayland = false; # fix teams screen sharing
         };
+
+        # Remove unused programs
+        environment.gnome.excludePackages = (with pkgs.gnome; [
+          epiphany # webbrowser use firefox
+          geary # email reader
+        ]);
       })
 
       (mkIf (cfg.desktop == "plasma") {
