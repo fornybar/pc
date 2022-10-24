@@ -1,7 +1,6 @@
 {
-  nixConfig.flake-registry = "https://raw.githubusercontent.com/bkkp/flake-registry/main/flake-registry.json";
+  nixConfig.flake-registry = "https://raw.githubusercontent.com/bkkp/flake-registry/nixos-22.05/flake-registry.json";
 
-  inputs.nixpkgs.url = "nixpkgs/nixos-22.05";
   inputs.utils.inputs.nixpkgs.follows  = "nixpkgs";
 
   outputs = { self, nixpkgs, nix, sops-nix, utils }@inputs:
