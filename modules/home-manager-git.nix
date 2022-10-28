@@ -57,7 +57,7 @@ in {
            git.userEmail = user.email;
            git.extraConfig = {
              init.defaultBranch = "main";
-             core.editor = "vim";
+             core.editor = "nano";
            };
            #git.signing.key
            #git signing.signByDefault = true;
