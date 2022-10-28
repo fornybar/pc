@@ -35,6 +35,15 @@
 
     checks."x86_64-linux" = import ./tests inputs;
 
+    templates.default = {
+      path = ./templates;
+      description = "Example setup for nixos pc";
+      welcomeText = ''
+      # Nixos config setup
+      Setup a simple nixos pc
+      ''; # Can use markdown here
+    };
+
     devShells."x86_64-linux".default = let
       pkgs = import nixpkgs { system = "x86_64-linux"; };
     in

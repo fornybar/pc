@@ -1,0 +1,5 @@
+keys:
+  - &myagekey <your public age key>
+
+creation_rules:
+  - age: *myagekey
