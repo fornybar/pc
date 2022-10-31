@@ -8,5 +8,6 @@
     age
     azure-cli
     git-absorb
+    neofetch
   ];
 }
