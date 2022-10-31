@@ -5,7 +5,7 @@
 
   outputs = { self, nixpkgs, nix, sops-nix, utils }@inputs:
   {
-    nixosModules = import ./hardware // utils.lib.importDir ./modules
+    nixosModules = import ./hardware // utils.lib.dirToAttrs ./modules
     // {
       default = {
         imports = [
