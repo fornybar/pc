@@ -26,7 +26,6 @@
           ./modules/nixbuild.nix
           ./modules/boot.nix
           ./modules/nixpkgs.nix
-          ./modules/teams.nix
           ./modules/systemPackages.nix
           ./modules/services.nix
           ./modules/networking.nix
