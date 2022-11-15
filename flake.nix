@@ -8,27 +8,30 @@
     nixosModules = import ./hardware // utils.lib.importDir ./modules
     // {
       default = {
+        # Need to use path insted of self.nixosModules.xxxx
+        # so it is possible to disable modules
+        # https://github.com/NixOS/nixpkgs/pull/188289
         imports = [
-          self.nixosModules.nix
-          self.nixosModules.users
-          self.nixosModules.system
-          self.nixosModules.fileSystems
-          self.nixosModules.keyboard
-          self.nixosModules.sops
-          self.nixosModules.desktop
-          self.nixosModules.virtualisation
-          self.nixosModules.home-manager
-          self.nixosModules.home-manager-git
-          self.nixosModules.home-manager-programs
-          self.nixosModules.nixbuild
-          self.nixosModules.boot
-          self.nixosModules.nixpkgs
-          self.nixosModules.teams
-          self.nixosModules.systemPackages
-          self.nixosModules.services
-          self.nixosModules.networking
-          self.nixosModules.local
-          self.nixosModules.nix-access-tokens
+          ./modules/nix.nix
+          ./modules/users.nix
+          ./modules/system.nix
+          ./modules/fileSystems.nix
+          ./modules/keyboard.nix
+          ./modules/sops.nix
+          ./modules/desktop.nix
+          ./modules/virtualisation.nix
+          ./modules/home-manager.nix
+          ./modules/home-manager-git.nix
+          ./modules/home-manager-programs.nix
+          ./modules/nixbuild.nix
+          ./modules/boot.nix
+          ./modules/nixpkgs.nix
+          ./modules/teams.nix
+          ./modules/systemPackages.nix
+          ./modules/services.nix
+          ./modules/networking.nix
+          ./modules/local.nix
+          ./modules/nix-access-tokens.nix
         ];
       };
     };
