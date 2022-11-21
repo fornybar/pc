@@ -2,9 +2,6 @@
 with lib;
 
 mkMerge [
-  {
-    environment.systemPackages = with pkgs; [ teams ];
-  }
   (mkIf (config.midgard.pc.desktop == "gnome") {
     # Turn of wayland to fix screen sharing in teams
     services.xserver.displayManager.gdm.wayland = false;

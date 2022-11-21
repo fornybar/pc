@@ -31,6 +31,7 @@
           ./modules/networking.nix
           ./modules/local.nix
           ./modules/nix-access-tokens.nix
+          ./modules/fix-teams-screen-share.nix
         ];
       };
     };
