@@ -20,6 +20,12 @@ let
         type = with types; nullOr path;
         description = "GitHub personal token";
       };
+
+      editor = mkOption {
+        type = with types; enum [ "nano" "vim" ];
+        description = "Default git text editor";
+        default = "nano";
+      };
     };
 
     config = {
@@ -57,7 +63,7 @@ in {
            git.userEmail = user.email;
            git.extraConfig = {
              init.defaultBranch = "main";
-             core.editor = "nano";
+             core.editor = cfg.${name}.git.editor;
              push.default = "current"; # Remove for git >= v2.37.1
              #push.autoSetupRemote = true; #git >= v2.37.1
            };
