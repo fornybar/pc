@@ -1,5 +1,5 @@
 {
-  nixConfig.flake-registry = "https://raw.githubusercontent.com/bkkp/flake-registry/nixos-22.05/flake-registry.json";
+  nixConfig.flake-registry = "https://raw.githubusercontent.com/bkkp/flake-registry/nixos-22.11/flake-registry.json";
 
   inputs.utils.inputs.nixpkgs.follows  = "nixpkgs";
 

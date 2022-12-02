@@ -42,7 +42,7 @@ in {
     home-manager.useUserPackages = true;
 
     home-manager.users = mapHomeManagerUsers (name: user: {
-      home.stateVersion = "22.05";
+      home.stateVersion = "22.11";
 
       home.username = user.name;
       home.homeDirectory = config.users.users."${name}".home;
