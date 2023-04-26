@@ -26,7 +26,7 @@ with lib;
           echo "setting up nix access-tokens for ${name}"
           mkdir -p ~/.config/nix
           echo "access-tokens = github.com=$(cat ${config.sops.secrets."${name}/github-token".path})" > ~/.config/nix/nix.conf
-          chmod 400 ~/.config/nix/nix.conf
+          chmod 600 ~/.config/nix/nix.conf
         '';
       };
     }) midgardUsers
