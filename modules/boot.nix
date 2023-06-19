@@ -3,4 +3,5 @@
   boot.loader.efi.canTouchEfiVariables = true;
   boot.loader.efi.efiSysMountPoint = "/boot/efi";
   boot.loader.systemd-boot.configurationLimit = 10;
+  boot.tmp.cleanOnBoot = true;
 }
