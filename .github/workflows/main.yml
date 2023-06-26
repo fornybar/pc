@@ -22,7 +22,7 @@ jobs:
             experimental-features = nix-command flakes
             access-tokens = github.com=${{ secrets.SVADIL_TOKEN }}
 
-      - uses: nixbuild/nixbuild-action@v15
+      - uses: nixbuild/nixbuild-action@v18
         with:
           nixbuild_ssh_key: ${{ secrets.nixbuild_ssh_key }}
 
