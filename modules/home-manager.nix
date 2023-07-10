@@ -25,7 +25,7 @@ let
   };
 in {
 
-  imports = [ 
+  imports = [
     home-manager.nixosModules.home-manager
   ];
 
@@ -42,7 +42,7 @@ in {
     home-manager.useUserPackages = true;
 
     home-manager.users = mapHomeManagerUsers (name: user: {
-      home.stateVersion = "22.11";
+      home.stateVersion = "23.05";
 
       home.username = user.name;
       home.homeDirectory = config.users.users."${name}".home;

@@ -1,11 +1,12 @@
 {
-  nixConfig.flake-registry = "https://raw.githubusercontent.com/bkkp/flake-registry/nixos-22.11/flake-registry.json";
-
-  inputs.utils.inputs.nixpkgs.follows  = "nixpkgs";
+  nixConfig.flake-registry = "https://raw.githubusercontent.com/fornybar/registry/nixos-23.05/registry.json";
 
   outputs = { self, nixpkgs, nix, sops-nix, utils }@inputs:
-  {
-    nixosModules = import ./hardware // utils.lib.importDir ./modules
+  let
+    pkgs = import nixpkgs { overlay = [ utils.overlay ]; };
+    inherit (pkgs.midgard.lib) importDir;
+  in {
+    nixosModules = import ./hardware // importDir ./modules
     // {
       default = {
         # Need to use path insted of self.nixosModules.xxxx
