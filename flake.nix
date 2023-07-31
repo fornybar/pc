@@ -3,7 +3,10 @@
 
   outputs = { self, nixpkgs, nix, sops-nix, utils }@inputs:
   let
-    pkgs = import nixpkgs { overlay = [ utils.overlay ]; };
+    pkgs = import nixpkgs {
+      system = "x86_64-linux";
+      overlays = [ utils.overlay.libMidgard ];
+    };
     inherit (pkgs.midgard.lib) importDir;
   in {
     nixosModules = import ./hardware // importDir ./modules
