@@ -7,46 +7,35 @@ let
   nixStandard = pkgs.nix.version;
   nixLatest = nix.packages.x86_64-linux.nix.version;
 
-  withNixInput = import "${nixpkgs}/nixos/lib/testing-python.nix" {
-    system = "x86_64-linux";
-    specialArgs = { inherit (inputs) nix; };
-  };
+  makeTest = { expectedNixVersion, specialArgs ? { } }:
+  (nixpkgs.lib.nixos.runTest {
+    name = "test-nix-module";
+    hostPkgs = pkgs;
+    node.specialArgs = specialArgs;
+    nodes.machine = ({ pkgs, ... }:{
+      imports = [ self.nixosModules.nix ];
+      environment.systemPackages = [ pkgs.jq ];
+    });
 
-  noNixInput = import "${nixpkgs}/nixos/lib/testing-python.nix" {
-    system = "x86_64-linux";
-  };
+    testScript = ''
+      start_all()
 
-  makeTest = { name, environment, expectedNixVersion}:
-    environment.makeTest {
-      name = "test-with-nix-input";
+      with subtest("Check nix version"):
+        status, stdout = machine.execute("nix --version")
+        assert stdout == "nix (Nix) ${expectedNixVersion}\n", f"Got {stdout.strip()} expected nix version ${expectedNixVersion}"
 
-      nodes.machine = { 
-        imports = [ self.nixosModules.nix ];
-        environment.systemPackages = [ pkgs.jq ];
-      };
-
-      testScript = ''
-        start_all()
-
-        with subtest("Check nix version"):
-          status, stdout = machine.execute("nix --version")
-          assert stdout == "nix (Nix) ${expectedNixVersion}\n", f"Got {stdout.strip()} expected nix version ${expectedNixVersion}"
-
-        with subtest("Check nix settings"):
-          machine.succeed("""nix show-config --json | jq -e '."experimental-features".value as $val | $val == ["flakes", "nix-command"] or $val == [2, 3]'""")
-      '';
-    };
+      with subtest("Check nix settings"):
+       machine.succeed("""nix show-config --json | jq -e '."experimental-features".value as $val | $val == ["flakes", "nix-command"] or $val == [2, 3]'""")
+    '';
+  });
 
 in {
   test-nix-module-with-nix-input = makeTest {
-    name = "test-with-nix-input";
-    environment = withNixInput;
     expectedNixVersion = nixLatest;
+    specialArgs = { nix = inputs.nix; };
   };
 
   test-nix-module-no-nix-input = makeTest {
-    name = "test-without-nix-input";
-    environment = noNixInput;
     expectedNixVersion = nixStandard;
   };
 
