@@ -53,6 +53,6 @@ pkgs.nixosTest {
 
     with subtest("Check file mode for access-token"):
       stdout = machine.succeed("stat -c '%a' /home/user1/.config/nix/nix.conf")
-      assert stdout == "400\n", f"{stdout}"
+      assert stdout == "600\n", f"{stdout}"
   '';
 }
