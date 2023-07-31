@@ -7,32 +7,7 @@ on:
       - main
 
 jobs:
-
   checks:
-    name: Checks
-    runs-on: ubuntu-20.04
-
-    steps:
-      - uses: actions/checkout@v3
-
-      - uses: nixbuild/nix-quick-install-action@v19
-        with:
-          nix_on_tmpfs: true
-          nix_conf: |
-            experimental-features = nix-command flakes
-            access-tokens = github.com=${{ secrets.SVADIL_TOKEN }}
-
-      - uses: nixbuild/nixbuild-action@v15
-        with:
-          nixbuild_ssh_key: ${{ secrets.nixbuild_ssh_key }}
-
-      #- name: Check flake file format
-      #  run: nix flake check --no-build
-
-      - name: Run flake checks
-        # At the moment nix flake check with built do not work with remote build. So have to use nix build.
-        run: |
-          allChecks=$(nix flake show --json | jq -r '["checks", "x86_64-linux"] as $path | getpath($path) | keys | map(($path | ".#" + join(".")) + "." + .) | . []')
-          nix build -L \
-            --eval-store auto --store ssh-ng://eu.nixbuild.net \
-            $allChecks
+    uses: nixbuild/nixbuild-action/.github/workflows/ci-workflow.yml@v18
+    secrets:
+      nixbuild_ssh_key: ${{ secrets.nixbuild_ssh_key }}
