@@ -29,6 +29,8 @@ in {
     programs.ssh.extraConfig = ''
     Host eu.nixbuild.net
       PubkeyAcceptedKeyTypes ssh-ed25519
+      ServerAliveInterval 60
+      IPQoS throughput
       IdentityFile ${cfg.sshKeyPath}
     '';
 
