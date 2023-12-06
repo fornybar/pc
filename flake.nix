@@ -1,11 +1,11 @@
 {
   nixConfig.flake-registry = "https://raw.githubusercontent.com/fornybar/registry/nixos-23.05/registry.json";
 
-  outputs = { self, nixpkgs, nix, sops-nix, utils }@inputs:
+  outputs = { self, nixpkgs, nix, sops-nix, midgard-lib }@inputs:
   let
     pkgs = import nixpkgs {
       system = "x86_64-linux";
-      overlays = [ utils.overlay.libMidgard ];
+      overlays = [ midgard-lib.overlays.default ];
     };
     inherit (pkgs.midgard.lib) importDir;
   in {
