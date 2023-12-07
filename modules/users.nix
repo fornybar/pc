@@ -34,11 +34,11 @@ let
         default = null;
       };
 
-      passwordFile = mkOption {
+      hashedPasswordFile = mkOption {
         type = with types; nullOr str;
         description = ''
           File path to file contaning user password, made with `mkpasswd -m sha-512`.
-          Option hashedPassword override passwordFile. Default to sops secret <usernam>/password
+          Option hashedPassword override hashedPasswordFile. Default to sops secret <usernam>/password
 
           # secrets.yaml
           <username>:
@@ -69,9 +69,9 @@ in {
 
     security.sudo.wheelNeedsPassword = false;
 
-    users.users = mapUsers (_: user: 
+    users.users = mapUsers (_: user:
       {
-        inherit (user) hashedPassword passwordFile;
+        inherit (user) hashedPassword hashedPasswordFile;
         isNormalUser = true;
         description = user.fullName;
         extraGroups = [ "networkmanager" "wheel" ];
