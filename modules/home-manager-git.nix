@@ -43,7 +43,7 @@ in {
 
   config = {
     assertions = [
-      { 
+      {
           assertion = ! any id (lib.mapAttrsToList (name: user: isNull user.git.githubTokenPath) cfg);
           message = ''
             Sops secret <user>:github.token is missing from secrets.yaml for one or more users. Set it og change
@@ -56,7 +56,7 @@ in {
        mkIf cfg.${name}.git.enable {
          programs = {
            gh.enable = true;
-           gh.enableGitCredentialHelper = true;
+           gh.gitCredentialHelper.enable= true;
 
            git.enable = true;
            git.userName = user.git.userName;
