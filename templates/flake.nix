@@ -1,5 +1,5 @@
 {
-  nixConfig.flake-registry = "https://raw.githubusercontent.com/fornybar/registry/nixos-23.05/registry.json";
+  nixConfig.flake-registry = "https://raw.githubusercontent.com/fornybar/registry/main/registry.json";
 
   inputs = {
     home-manager.inputs.nixpkgs.follows = "nixpkgs";

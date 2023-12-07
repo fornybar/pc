@@ -25,7 +25,7 @@ let
         assert stdout == "nix (Nix) ${expectedNixVersion}\n", f"Got {stdout.strip()} expected nix version ${expectedNixVersion}"
 
       with subtest("Check nix settings"):
-       machine.succeed("""nix show-config --json | jq -e '."experimental-features".value as $val | $val == ["flakes", "nix-command"] or $val == [2, 3]'""")
+       machine.succeed("""nix show-config --json | jq -e '."experimental-features".value as $val | $val == ["flakes", "fetch-tree", "nix-command"] or $val == ["flakes", "nix-command"]'""")
     '';
   });
 
