@@ -64,8 +64,7 @@ in {
            git.extraConfig = {
              init.defaultBranch = "main";
              core.editor = cfg.${name}.git.editor;
-             push.default = "current"; # Remove for git >= v2.37.1
-             #push.autoSetupRemote = true; #git >= v2.37.1
+             push.autoSetupRemote = true;
            };
            #git.signing.key
            #git signing.signByDefault = true;
