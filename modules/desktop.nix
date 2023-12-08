@@ -43,7 +43,7 @@ in {
         users.users = mapHomeManagerUsers (name: user: {
           extraGroups = [ "video" ];
         });
-
+        environment.sessionVariables.GTK_USE_PORTAL = "1";
         home-manager.users = mapHomeManagerUsers (name: user: {
           wayland.windowManager.sway = {
             enable = true;
