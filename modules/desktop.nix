@@ -5,9 +5,9 @@ let
 in {
   options.midgard.pc = {
     desktop = mkOption {
-      type = with types; nullOr (enum [ "gnome" "plasma" ]);
+      type = with types; nullOr (enum [ "gnome" "hyprland" "plasma" ]);
       default = "gnome";
-      description = ''Which dekstop to use "gnome", "plasma" or null'';
+      description = ''Which dekstop to use "gnome", "hyprland", "plasma" or null'';
     };
   };
 
@@ -20,12 +20,15 @@ in {
           desktopManager.gnome.enable = true;
           displayManager.gdm.enable = true;
         };
-
         # Remove unused programs
         environment.gnome.excludePackages = (with pkgs.gnome; [
           epiphany # webbrowser use firefox
           geary # email reader
         ]);
+      })
+
+      (mkIf (cfg.desktop == "hyprland") {
+        programs.hyprland.enable = true;
       })
 
       (mkIf (cfg.desktop == "plasma") {
