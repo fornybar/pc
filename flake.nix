@@ -27,6 +27,7 @@
           ./modules/home-manager.nix
           ./modules/home-manager-git.nix
           ./modules/home-manager-programs.nix
+          ./modules/home-manager-gui-programs.nix
           ./modules/nixbuild.nix
           ./modules/boot.nix
           ./modules/nixpkgs.nix
