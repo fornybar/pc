@@ -32,6 +32,7 @@
           ./modules/boot.nix
           ./modules/nixpkgs.nix
           ./modules/systemPackages.nix
+          ./modules/systemPackagesGui.nix
           ./modules/services.nix
           ./modules/networking.nix
           ./modules/local.nix
