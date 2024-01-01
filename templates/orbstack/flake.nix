@@ -5,7 +5,7 @@
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
   };
 
-  outputs = { self, nixpkgs, pc, nix, sops-nix, home-manager }@inputs:
+  outputs = { self, nixpkgs, pc, sops-nix, home-manager }@inputs:
   {
     nixosConfigurations.gauss = nixpkgs.lib.nixosSystem {
       system = "aarch64-linux";
