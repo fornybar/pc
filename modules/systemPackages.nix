@@ -9,6 +9,5 @@
     azure-cli
     git-absorb
     neofetch
-    vscode.fhs
   ];
 }

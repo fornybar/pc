@@ -27,10 +27,12 @@
           ./modules/home-manager.nix
           ./modules/home-manager-git.nix
           ./modules/home-manager-programs.nix
+          ./modules/home-manager-gui-programs.nix
           ./modules/nixbuild.nix
           ./modules/boot.nix
           ./modules/nixpkgs.nix
           ./modules/systemPackages.nix
+          ./modules/systemPackagesGui.nix
           ./modules/services.nix
           ./modules/networking.nix
           ./modules/local.nix
@@ -38,18 +40,32 @@
           ./modules/ssh.nix
         ];
       };
+      terminal = {
+        imports = [
+          ./modules/docker.nix
+          ./modules/home-manager-git.nix
+          ./modules/home-manager-programs.nix
+          ./modules/home-manager.nix
+          ./modules/keyboard.nix
+          ./modules/local.nix
+          ./modules/networking.nix
+          ./modules/nix-access-tokens.nix
+          ./modules/nix.nix
+          ./modules/nixbuild.nix
+          ./modules/nixpkgs.nix
+          ./modules/sops.nix
+          ./modules/ssh.nix
+          ./modules/system.nix
+          ./modules/systemPackages.nix
+          ./modules/users.nix
+        ];
+
+      };
     };
 
     checks."x86_64-linux" = import ./tests inputs;
 
-    templates.default = {
-      path = ./templates;
-      description = "Example setup for nixos pc";
-      welcomeText = ''
-      # Nixos config setup
-      Setup a simple nixos pc
-      ''; # Can use markdown here
-    };
+    templates = import ./templates;
 
     devShells."x86_64-linux".default = let
       pkgs = import nixpkgs { system = "x86_64-linux"; };

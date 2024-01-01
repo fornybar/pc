@@ -44,8 +44,15 @@ in {
     nix = {
       distributedBuilds = true;
       buildMachines = [
-        { hostName = "eu.nixbuild.net";
+        {
+          hostName = "eu.nixbuild.net";
           system = "x86_64-linux";
+          maxJobs = 100;
+          supportedFeatures = [ "benchmark" "big-parallel" "kvm" "nixos-test" ];
+        }
+        {
+          hostName = "eu.nixbuild.net";
+          system = "aarch64-linux";
           maxJobs = 100;
           supportedFeatures = [ "benchmark" "big-parallel" "kvm" "nixos-test" ];
         }

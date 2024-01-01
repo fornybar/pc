@@ -8,10 +8,6 @@
       zsh.enable = true;
 
       starship.enable = true;
-      chromium = {
-        enable = true;
-        package = pkgs.google-chrome;
-      };
       fzf.enable = true;
       bat.enable = true;
     };
