@@ -7,7 +7,6 @@
       fish.enable = true;
       zsh.enable = true;
 
-      starship.enable = true;
       fzf.enable = true;
       bat.enable = true;
     };

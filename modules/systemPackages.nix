@@ -9,5 +9,8 @@
     azure-cli
     git-absorb
     neofetch
+    starship
   ];
+
+  programs.starship.enable = true;
 }
