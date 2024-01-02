@@ -1,6 +1,10 @@
 { modulesPath, ...}: {
   disabledModules = [ ../modules/local.nix ];
 
+  programs.starship.settings = {
+    container.disabled = true;
+  };
+
   # >>> FROM /etc/nixos/configuration.nix in orbstack
 
   imports = [
