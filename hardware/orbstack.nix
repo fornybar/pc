@@ -1,9 +1,13 @@
 { modulesPath, ...}: {
+  disabledModules = [ ../modules/local.nix ];
+
   # >>> FROM /etc/nixos/configuration.nix in orbstack
 
   imports = [
     "${modulesPath}/virtualisation/lxc-container.nix"
   ];
+
+  time.timeZone = "Europe/Oslo";
 
   # As this is intended as a stadalone image, undo some of the minimal profile stuff
   documentation.enable = true;
