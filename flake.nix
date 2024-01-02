@@ -60,6 +60,8 @@
           ./modules/users.nix
         ];
 
+        # Make vscode remote to work
+       programs.nix-ld.enable = true;
       };
     };
 
