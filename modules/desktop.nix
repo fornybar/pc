@@ -5,7 +5,7 @@ let
 in {
   options.midgard.pc = {
     desktop = mkOption {
-      type = with types; nullOr (enum [ "gnome" "plasma" ]);
+      type = with types; nullOr (enum [ "gnome" "plasma" "hyperland"]);
       default = "gnome";
       description = ''Which dekstop to use "gnome", "plasma" or null'';
     };
@@ -33,6 +33,10 @@ in {
           displayManager.sddm.enable = true;
           desktopManager.plasma5.enable = true;
         };
+      })
+
+      (mkIf (cfg.desktop == "hyperland") {
+        programs.hyprland.enable = true;
       })
     ]
   );
