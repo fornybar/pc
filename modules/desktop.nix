@@ -13,10 +13,9 @@ in {
 
   config = mkIf (cfg.desktop != null) (
     mkMerge [
-      { services.xserver.enable = true; }
-
       (mkIf (cfg.desktop == "gnome") {
         services.xserver = {
+          enable = true;
           desktopManager.gnome.enable = true;
           displayManager.gdm.enable = true;
         };
@@ -30,6 +29,7 @@ in {
 
       (mkIf (cfg.desktop == "plasma") {
         services.xserver = {
+          enable = true;
           displayManager.sddm.enable = true;
           desktopManager.plasma5.enable = true;
         };
