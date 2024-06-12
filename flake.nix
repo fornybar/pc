@@ -1,5 +1,5 @@
 {
-  nixConfig.flake-registry = "https://raw.githubusercontent.com/forndybar/registry/main/registry.json";
+  nixConfig.flake-registry = "https://raw.githubusercontent.com/fornybar/registry/main/registry.json";
 
   outputs = { self, nixpkgs, nix, sops-nix, midgard-lib }@inputs:
   let
