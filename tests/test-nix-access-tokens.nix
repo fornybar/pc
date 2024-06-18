@@ -14,7 +14,7 @@ pkgs.nixosTest {
       sops-nix.nixosModules.sops
     ];
 
-    sops.age.keyFile = ./data/keys.txt;
+    sops.age.keyFile = "/root/.config/sops/age/keys.txt";
     sops.defaultSopsFile = ./data/nix-access-tokens/secrets.yaml;
     sops.secrets.github-token = { };
     sops.secrets."user1/github-token".owner = "user1";
@@ -30,7 +30,21 @@ pkgs.nixosTest {
   };
 
   testScript = ''
-    start_all()
+    def cmd(command):
+      print(f"+{command}")
+      r = os.system(command)
+      if r != 0:
+        raise Exception(f"Command {command} failed with exit code {r}")
+
+    machine.start(True)
+
+    # Copy age secret into machine
+    cmd('echo "AGE-SECRET-KEY-1EGD55T6D8AUD7G03UDDKHMDDCQKKF4H93TEJ207G3RN85UDWMN7SYYPTTG" > keys.txt')
+    machine.copy_from_host("keys.txt", "/root/.config/sops/age/keys.txt")
+
+    # Reboot machine with age secret key loaded
+    machine.wait_for_file("/root/.config/sops/age/keys.txt")
+    machine.reboot()
 
     with subtest("Check access-token file creation"):
       stdout = machine.succeed("cat /etc/nix/access-tokens")
