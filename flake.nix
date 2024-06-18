@@ -18,7 +18,6 @@
         imports = [
           ./modules/nix.nix
           ./modules/users.nix
-          ./modules/system.nix
           ./modules/fileSystems.nix
           ./modules/keyboard.nix
           ./modules/sops.nix
@@ -55,7 +54,6 @@
           ./modules/nixpkgs.nix
           ./modules/sops.nix
           ./modules/ssh.nix
-          ./modules/system.nix
           ./modules/systemPackages.nix
           ./modules/users.nix
         ];
