@@ -1,8 +1,20 @@
-{ config, ... }:
+{ config, lib, ... }:
 # See for docs: https://nixos.wiki/wiki/Nvidia
 # We try to make this module as robust as possible, potentially at the cost of performance.
 # Nvidia on NixOS is hard so users must enable extra features themselves.
 {
+
+  # Found here https://github.com/NixOS/nixos-hardware/blob/master/common/gpu/24.05-compat.nix
+  # Backward-compat for 24.05, can be removed after we drop 24.05 support
+  imports = lib.optionals (lib.versionOlder lib.version "24.11pre") [
+    (lib.mkAliasOptionModule [ "hardware" "graphics" "enable" ] [ "hardware" "opengl" "enable" ])
+    (lib.mkAliasOptionModule [ "hardware" "graphics" "extraPackages" ] [ "hardware" "opengl" "extraPackages" ])
+    (lib.mkAliasOptionModule [ "hardware" "graphics" "extraPackages32" ] [ "hardware" "opengl" "extraPackages32" ])
+    (lib.mkAliasOptionModule [ "hardware" "graphics" "enable32Bit" ] [ "hardware" "opengl" "driSupport32Bit" ])
+    (lib.mkAliasOptionModule [ "hardware" "graphics" "package" ] [ "hardware" "opengl" "package" ])
+    (lib.mkAliasOptionModule [ "hardware" "graphics" "package32" ] [ "hardware" "opengl" "package32" ])
+  ];
+
   boot.kernelParams = [ "nvidia-drm.fbdev=1" ];
   boot.initrd.kernelModules = [ "i915" "nvidia" "nvidia_drm" "nvidia_modeset" ];
 
