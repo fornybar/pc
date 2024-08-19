@@ -15,6 +15,8 @@
 
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
 
+  hardware.intel-gpu-tools.enable = lib.mkDefault true; # For debugging
+
   # Make nvidia less error prone (https://nixos.wiki/wiki/Nvidia)
   hardware.nvidia = {
     open = lib.mkDefault false;
