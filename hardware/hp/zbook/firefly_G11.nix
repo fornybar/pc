@@ -38,4 +38,7 @@
       finegrained = lib.mkDefault false;
     };
   };
+
+  # Fix random crashes, make nvidia sync work but disable wayland and fallback to x11
+  services.xserver.displayManager.gdm.wayland = lib.mkDefault false;
 }
