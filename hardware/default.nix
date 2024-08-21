@@ -4,5 +4,4 @@
   hdw-hp-zbook-firefly_g11 = import ./hp/zbook/firefly_G11.nix;
   hdw-lenovo-t14s-intel-gen3 = import ./lenovo/thinkpad/t14s/intel-gen3.nix;
   hdw-orbstack = import ./orbstack.nix;
-  hdw-gpu-nvidia = import ./gpu/nvidia.nix;
 }
