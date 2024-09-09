@@ -3,5 +3,5 @@
   hdw-hp-zbook-firefly_15_g8 = import ./hp/zbook/firefly_15_G8.nix;
   hdw-hp-zbook-firefly_g11 = import ./hp/zbook/firefly_G11.nix;
   hdw-lenovo-t14s-intel-gen3 = import ./lenovo/thinkpad/t14s/intel-gen3.nix;
-  hdw-orbstack = import ./orbstack.nix;
+  hdw-orbstack = import ./orbstack;
 }
