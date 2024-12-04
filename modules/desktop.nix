@@ -22,7 +22,7 @@ in {
         };
 
         # Remove unused programs
-        environment.gnome.excludePackages = (with pkgs.gnome; [
+        environment.gnome.excludePackages = (with pkgs; [
           epiphany # webbrowser use firefox
           geary # email reader
         ]);
