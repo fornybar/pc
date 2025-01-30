@@ -4,8 +4,11 @@
 {
   imports = [
     (modulesPath + "/installer/scan/not-detected.nix")
-    nixos-hardware.nixosModules.hp-firefly-g11
     nixos-hardware.nixosModules.common-gpu-nvidia-sync
+    "${nixos-hardware}/common/pc/laptop"
+    "${nixos-hardware}/common/pc/laptop/ssd"
+    "${nixos-hardware}/common/cpu/intel"
+    "${nixos-hardware}/common/gpu/nvidia"
   ];
 
   # Path must be according to modules/fileSystems.nix
@@ -17,27 +20,29 @@
 
   hardware.intel-gpu-tools.enable = lib.mkDefault true; # For debugging
 
-  # Make nvidia less error prone (https://nixos.wiki/wiki/Nvidia)
-  hardware.nvidia = {
-    open = lib.mkDefault false;
-    nvidiaSettings = lib.mkDefault true; # For debugging
+  boot.initrd.availableKernelModules = [ "xhci_pci" "thunderbolt" "nvme" "usb_storage" "sd_mod" ];
 
-    # nvidiaPackages.stable didn't build on nixos-24.05 so use newer version
-    # However, we need to change it back when stable works again.
-    package = lib.mkDefault (config.boot.kernelPackages.nvidiaPackages.mkDriver {
-      version = "555.58.02";
-      sha256_64bit = "sha256-xctt4TPRlOJ6r5S54h5W6PT6/3Zy2R4ASNFPu8TSHKM=";
-      sha256_aarch64 = "sha256-wb20isMrRg8PeQBU96lWJzBMkjfySAUaqt4EgZnhyF8=";
-      openSha256 = "sha256-8hyRiGB+m2hL3c9MDA/Pon+Xl6E788MZ50WrrAGUVuY=";
-      settingsSha256 = "sha256-ZpuVZybW6CFN/gz9rx+UJvQ715FZnAOYfHn5jt5Z2C8=";
-      persistencedSha256 = "sha256-a1D7ZZmcKFWfPjjH1REqPM5j/YLWKnbkP9qfRyIyxAw=";
-    });
+  boot.kernelModules = [ "kvm-intel" ];
 
-    powerManagement = {
-      enable = lib.mkDefault false;
-      finegrained = lib.mkDefault false;
-    };
+
+  hardware.intelgpu = {
+    driver = lib.mkDefault "xe";
+    loadInInitrd = lib.mkDefault false;
   };
+
+  hardware.nvidia = {
+    open = lib.mkDefault true;
+
+    # default driver is broken for 6.12
+    package = config.boot.kernelPackages.nvidiaPackages.beta;
+  };
+
+  hardware.nvidia.prime = {
+    intelBusId = "PCI:0:2:0"; # pci@0000:00:02.0
+    nvidiaBusId = "PCI:1:0:0"; # pci@0000:01:00.0
+  };
+
+  hardware.enableRedistributableFirmware = lib.mkDefault true;
 
   # Fix random crashes, make nvidia sync work but disable wayland and fallback to x11
   services.xserver.displayManager.gdm.wayland = lib.mkDefault false;
