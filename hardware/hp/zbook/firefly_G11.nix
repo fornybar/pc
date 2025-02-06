@@ -20,10 +20,10 @@
 
   hardware.intel-gpu-tools.enable = lib.mkDefault true; # For debugging
 
-  boot.initrd.availableKernelModules = [ "xhci_pci" "thunderbolt" "nvme" "usb_storage" "sd_mod" ];
+  boot.initrd.availableKernelModules =
+    [ "xhci_pci" "thunderbolt" "nvme" "usb_storage" "sd_mod" ];
 
   boot.kernelModules = [ "kvm-intel" ];
-
 
   hardware.intelgpu = {
     driver = lib.mkDefault "xe";
@@ -34,7 +34,7 @@
     open = lib.mkDefault true;
 
     # default driver is broken for 6.12
-    package = config.boot.kernelPackages.nvidiaPackages.beta;
+    package = config.boot.kernelPackages.nvidiaPackages.stable;
   };
 
   hardware.nvidia.prime = {
