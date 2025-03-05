@@ -67,6 +67,7 @@
 
     templates = import ./templates;
 
+    # Nix CI
     herculesCI = { };
 
     devShells."x86_64-linux".default = let
