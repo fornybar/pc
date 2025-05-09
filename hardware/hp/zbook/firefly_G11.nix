@@ -6,7 +6,7 @@
     (modulesPath + "/installer/scan/not-detected.nix")
     nixos-hardware.nixosModules.common-gpu-nvidia-sync
     "${nixos-hardware}/common/pc/laptop"
-    "${nixos-hardware}/common/pc/laptop/ssd"
+    "${nixos-hardware}/common/pc/ssd"
     "${nixos-hardware}/common/cpu/intel"
     "${nixos-hardware}/common/gpu/nvidia"
   ];
