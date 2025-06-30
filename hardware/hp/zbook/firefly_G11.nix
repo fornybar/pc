@@ -32,9 +32,7 @@
 
   hardware.nvidia = {
     open = lib.mkDefault true;
-
-    # default driver is broken for 6.12
-    package = config.boot.kernelPackages.nvidiaPackages.beta;
+    package = lib.mkDefault config.boot.kernelPackages.nvidiaPackages.stable;
   };
 
   hardware.nvidia.prime = {
