@@ -28,7 +28,7 @@ in
     { services.xserver.enable = true; }
 
     (mkIf (cfg.desktop == "gnome") {
-      services.xserver = {
+      services = {
         desktopManager.gnome.enable = true;
         displayManager.gdm.enable = true;
       };
