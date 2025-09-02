@@ -11,6 +11,5 @@ with lib;
   # Garbage collect once every week
   nix.gc = {
     automatic = true;
-    dates = "weekly";
   };
 }
