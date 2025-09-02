@@ -69,7 +69,7 @@
           # ./modules/sops.nix
           # ./modules/ssh.nix
           # ./modules/systemPackages.nix
-          # ./modules/users.nix
+          ./modules/users.nix
         ];
       };
     };
