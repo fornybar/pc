@@ -65,7 +65,7 @@ in {
   config = {
     _module.args = { inherit mapUsers midgardUsers; };
 
-    users.mutableUsers = false;
+    #users.mutableUsers = false;
 
     #security.sudo.wheelNeedsPassword = false;
 
