@@ -66,7 +66,7 @@
           ./modules/nix.nix
           # ./modules/nixbuild.nix
           # ./modules/nixpkgs.nix
-          # ./modules/sops.nix
+          ./modules/sops.nix
           # ./modules/ssh.nix
           # ./modules/systemPackages.nix
           ./modules/users.nix
