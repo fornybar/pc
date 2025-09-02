@@ -74,7 +74,7 @@ in {
         inherit (user) hashedPassword hashedPasswordFile;
         isNormalUser = true;
         description = user.fullName;
-        extraGroups = [ "networkmanager" "wheel" ];
+        #extraGroups = [ "networkmanager" "wheel" ];
         packages = with pkgs; [ ];
       }
     );
