@@ -2,7 +2,7 @@
 {
 
   imports = [
-    sops-nix.nixosModules.sops
+    sops-nix.darwinModules.sops
   ];
 
   environment.systemPackages = [ pkgs.sops ];
