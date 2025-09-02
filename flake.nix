@@ -61,6 +61,17 @@
         # Make vscode remote to work
        programs.nix-ld.enable = true;
       };
+      mac = {
+        imports = [
+          ./modules/nix.nix
+          # ./modules/nixbuild.nix
+          # ./modules/nixpkgs.nix
+          # ./modules/sops.nix
+          # ./modules/ssh.nix
+          # ./modules/systemPackages.nix
+          # ./modules/users.nix
+        ];
+      };
     };
 
     checks."x86_64-linux" = import ./tests inputs;
