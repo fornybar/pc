@@ -67,7 +67,7 @@ in {
 
     users.mutableUsers = false;
 
-    security.sudo.wheelNeedsPassword = false;
+    #security.sudo.wheelNeedsPassword = false;
 
     users.users = mapUsers (_: user:
       {
