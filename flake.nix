@@ -70,6 +70,7 @@
           # ./modules/ssh.nix
           # ./modules/systemPackages.nix
           ./modules/users.nix
+          ./modules/networking.nix
         ];
       };
     };

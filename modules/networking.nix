@@ -11,6 +11,6 @@ with lib;
   config = {
     networking.hostName = config.midgard.pc.hostName;
 
-    networking.networkmanager.enable = true;
+    #networking.networkmanager.enable = true;
   };
 }
