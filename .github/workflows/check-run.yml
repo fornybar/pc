@@ -36,6 +36,7 @@ jobs:
         with:
 #          flake: './deployments/eu'
           filter_builds: |
-            .top_attr == "checks" and (.attr | startswith("nixos-"))
+            .top_attr == "checks"
+           # and (.attr | startswith("nixos-"))
 #          label_builds: |
 #            "eu:\(.attr|ltrimstr("nixos-"))"
