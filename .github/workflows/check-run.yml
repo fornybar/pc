@@ -1,0 +1,42 @@
+name: Create check runs
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+      - dev
+
+jobs:
+
+  eu-deployment:
+    name: "deployments / eu"
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write # Needed when 'oidc: true' for nixbuild-action
+      contents: read
+    steps:
+      - name: Install Nix
+        uses: nixbuild/nix-quick-install-action@v33
+        with:
+          nix_version: '2.31.0'
+          github_access_token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup nixbuild.net
+        uses: nixbuild/nixbuild-action@check_runs
+        with:
+          nixbuild_token: ${{ secrets.NIXBUILD_TOKEN }}
+          oidc: true
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Create check runs
+        uses: nixbuild/nixbuild-action/check-runs@check_runs
+        with:
+#          flake: './deployments/eu'
+          filter_builds: |
+            .top_attr == "checks"
+           # and (.attr | startswith("nixos-"))
+#          label_builds: |
+#            "eu:\(.attr|ltrimstr("nixos-"))"
