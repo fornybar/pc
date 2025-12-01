@@ -59,9 +59,9 @@ in {
            gh.gitCredentialHelper.enable= true;
 
            git.enable = true;
-           git.userName = user.git.userName;
-           git.userEmail = user.email;
-           git.extraConfig = {
+           git.settings.user.name = user.git.userName;
+           git.settings.user.email = user.email;
+           git.settings = {
              init.defaultBranch = "main";
              core.editor = cfg.${name}.git.editor;
              push.autoSetupRemote = true;
