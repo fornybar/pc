@@ -1,4 +1,10 @@
-{ config, lib, modulesPath, nixos-hardware, ... }:
+{
+  config,
+  lib,
+  modulesPath,
+  nixos-hardware,
+  ...
+}:
 # Include https://github.com/NixOS/nixos-hardware in inputs when using
 
 {
@@ -12,7 +18,10 @@
   ];
 
   # Path must be according to modules/fileSystems.nix
-  fileSystems."/boot/efi".options = [ "fmask=0022" "dmask=0022" ];
+  fileSystems."/boot/efi".options = [
+    "fmask=0022"
+    "dmask=0022"
+  ];
 
   networking.useDHCP = lib.mkDefault true;
 
@@ -20,10 +29,15 @@
 
   hardware.intel-gpu-tools.enable = lib.mkDefault true; # For debugging
 
-  boot.initrd.availableKernelModules = [ "xhci_pci" "thunderbolt" "nvme" "usb_storage" "sd_mod" ];
+  boot.initrd.availableKernelModules = [
+    "xhci_pci"
+    "thunderbolt"
+    "nvme"
+    "usb_storage"
+    "sd_mod"
+  ];
 
   boot.kernelModules = [ "kvm-intel" ];
-
 
   hardware.intelgpu = {
     driver = lib.mkDefault "xe";
@@ -43,5 +57,5 @@
   hardware.enableRedistributableFirmware = lib.mkDefault true;
 
   # Fix random crashes, make nvidia sync work but disable wayland and fallback to x11
-  services.xserver.displayManager.gdm.wayland = lib.mkDefault false;
+  services.displayManager.gdm.wayland = lib.mkDefault false;
 }
