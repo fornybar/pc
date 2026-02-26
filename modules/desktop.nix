@@ -16,11 +16,11 @@ in
         with types;
         nullOr (enum [
           "gnome"
-          "plasma"
+          "plasma6"
           "sway"
         ]);
       default = "gnome";
-      description = ''Which dekstop to use "gnome", "plasma" or null'';
+      description = ''Which desktop to use: "gnome", "plasma6", "sway", or null'';
     };
   };
 
@@ -43,10 +43,11 @@ in
       );
     })
 
-    (mkIf (cfg.desktop == "plasma") {
-      services.xserver = {
-        displayManager.sddm.enable = true;
-        desktopManager.plasma5.enable = true;
+    (mkIf (cfg.desktop == "plasma6") {
+      services.desktopManager.plasma6.enable = true;
+      services.displayManager.sddm = {
+        enable = true;
+        wayland.enable = true;
       };
     })
 
