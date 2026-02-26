@@ -37,13 +37,10 @@ in
       };
 
       # Remove unused programs
-      environment.gnome.excludePackages = (
-        with pkgs;
-        [
-          epiphany # webbrowser use firefox
-          geary # email reader
-        ]
-      );
+      environment.gnome.excludePackages = with pkgs; [
+        epiphany # webbrowser use firefox
+        geary # email reader
+      ];
     })
 
     (mkIf (cfg.desktop == "plasma6") {
@@ -59,14 +56,10 @@ in
       security.pam.services.swaylock = { };
       programs.light.enable = true;
 
-      users.users = mapHomeManagerUsers (
-        name: user: {
-          extraGroups = [ "video" ];
-        }
-      );
+      users.users = mapHomeManagerUsers (_: _: { extraGroups = [ "video" ]; });
       environment.sessionVariables.GTK_USE_PORTAL = "1";
       home-manager.users = mapHomeManagerUsers (
-        name: user: {
+        _: _: {
           wayland.windowManager.sway = {
             enable = true;
             config = rec {
