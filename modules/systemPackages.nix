@@ -8,7 +8,7 @@
     age
     azure-cli
     git-absorb
-    neofetch
+    fastfetch
     starship
   ];
 
