@@ -4,7 +4,7 @@ with inputs;
 let
   pkgs = import nixpkgs { system = "x86_64-linux"; };
 in
-pkgs.nixosTest {
+pkgs.testers.nixosTest {
   name = "test-nix-access-tokens";
 
   nodes.machine = {
@@ -14,10 +14,12 @@ pkgs.nixosTest {
       sops-nix.nixosModules.sops
     ];
 
-    sops.age.keyFile = "/root/.config/sops/age/keys.txt";
-    sops.defaultSopsFile = ./data/nix-access-tokens/secrets.yaml;
-    sops.secrets.github-token = { };
-    sops.secrets."user1/github-token".owner = "user1";
+    sops = {
+      age.keyFile = "/root/.config/sops/age/keys.txt";
+      defaultSopsFile = ./data/nix-access-tokens/secrets.yaml;
+      secrets.github-token = { };
+      secrets."user1/github-token".owner = "user1";
+    };
 
     midgard.pc.users = {
       # user without password
