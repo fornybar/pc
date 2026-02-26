@@ -1,4 +1,5 @@
-{ modulesPath, ...}: {
+{ modulesPath, ... }:
+{
   disabledModules = [ ../modules/local.nix ];
 
   programs.starship.settings = {
@@ -18,10 +19,11 @@
   documentation.nixos.enable = true;
   environment.noXlibs = false;
 
-  networking.networkmanager.enable = true;
-  networking.useDHCP = false;
-  networking.interfaces.eth0.useDHCP = true;
-
+  networking = {
+    networkmanager.enable = true;
+    useDHCP = false;
+    interfaces.eth0.useDHCP = true;
+  };
 
   # >>> FROM /etc/nixos/orbstack.nix in orbstack
 
@@ -44,25 +46,27 @@
   services.openssh.enable = false;
 
   # systemd
-  systemd.services."systemd-oomd".serviceConfig.WatchdogSec = 0;
-  systemd.services."systemd-resolved".serviceConfig.WatchdogSec = 0;
-  systemd.services."systemd-userdbd".serviceConfig.WatchdogSec = 0;
-  systemd.services."systemd-udevd".serviceConfig.WatchdogSec = 0;
-  systemd.services."systemd-timesyncd".serviceConfig.WatchdogSec = 0;
-  systemd.services."systemd-timedated".serviceConfig.WatchdogSec = 0;
-  systemd.services."systemd-portabled".serviceConfig.WatchdogSec = 0;
-  systemd.services."systemd-nspawn@".serviceConfig.WatchdogSec = 0;
-  systemd.services."systemd-networkd".serviceConfig.WatchdogSec = 0;
-  systemd.services."systemd-machined".serviceConfig.WatchdogSec = 0;
-  systemd.services."systemd-localed".serviceConfig.WatchdogSec = 0;
-  systemd.services."systemd-logind".serviceConfig.WatchdogSec = 0;
-  systemd.services."systemd-journald@".serviceConfig.WatchdogSec = 0;
-  systemd.services."systemd-journald".serviceConfig.WatchdogSec = 0;
-  systemd.services."systemd-journal-remote".serviceConfig.WatchdogSec = 0;
-  systemd.services."systemd-journal-upload".serviceConfig.WatchdogSec = 0;
-  systemd.services."systemd-importd".serviceConfig.WatchdogSec = 0;
-  systemd.services."systemd-hostnamed".serviceConfig.WatchdogSec = 0;
-  systemd.services."systemd-homed".serviceConfig.WatchdogSec = 0;
+  systemd.services = {
+    "systemd-oomd".serviceConfig.WatchdogSec = 0;
+    "systemd-resolved".serviceConfig.WatchdogSec = 0;
+    "systemd-userdbd".serviceConfig.WatchdogSec = 0;
+    "systemd-udevd".serviceConfig.WatchdogSec = 0;
+    "systemd-timesyncd".serviceConfig.WatchdogSec = 0;
+    "systemd-timedated".serviceConfig.WatchdogSec = 0;
+    "systemd-portabled".serviceConfig.WatchdogSec = 0;
+    "systemd-nspawn@".serviceConfig.WatchdogSec = 0;
+    "systemd-networkd".serviceConfig.WatchdogSec = 0;
+    "systemd-machined".serviceConfig.WatchdogSec = 0;
+    "systemd-localed".serviceConfig.WatchdogSec = 0;
+    "systemd-logind".serviceConfig.WatchdogSec = 0;
+    "systemd-journald@".serviceConfig.WatchdogSec = 0;
+    "systemd-journald".serviceConfig.WatchdogSec = 0;
+    "systemd-journal-remote".serviceConfig.WatchdogSec = 0;
+    "systemd-journal-upload".serviceConfig.WatchdogSec = 0;
+    "systemd-importd".serviceConfig.WatchdogSec = 0;
+    "systemd-hostnamed".serviceConfig.WatchdogSec = 0;
+    "systemd-homed".serviceConfig.WatchdogSec = 0;
+  };
 
   # ssh config
   programs.ssh.extraConfig = ''
