@@ -57,7 +57,7 @@ in
   config = {
     assertions = [
       {
-        assertion = !any id (lib.mapAttrsToList (name: user: isNull user.git.githubTokenPath) cfg);
+        assertion = !any id (lib.mapAttrsToList (_: user: user.git.githubTokenPath == null) cfg);
         message = ''
           Sops secret <user>:github.token is missing from secrets.yaml for one or more users. Set it og change
           midgard.pc.users.<users>.git.githubTokenPath to a file with github-token.
