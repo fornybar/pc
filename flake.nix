@@ -1,23 +1,36 @@
 {
   nixConfig.flake-registry = "https://raw.githubusercontent.com/fornybar/registry/main/registry.json";
 
-  # Ensure sops-nix uses our nixpkgs to avoid duplicate nixpkgs evaluations.
-  inputs.sops-nix.inputs.nixpkgs.follows = "nixpkgs";
+  inputs = {
+    # Ensure sops-nix uses our nixpkgs to avoid duplicate nixpkgs evaluations.
+    sops-nix.inputs.nixpkgs.follows = "nixpkgs";
+    treefmt-nix.url = "github:numtide/treefmt-nix";
+    treefmt-nix.inputs.nixpkgs.follows = "nixpkgs";
+  };
 
   outputs =
     {
-      self,
       nixpkgs,
-      nix,
-      sops-nix,
-      midgard-lib,
+      treefmt-nix,
+      ...
     }@inputs:
     let
-      pkgs = import nixpkgs {
-        system = "x86_64-linux";
-        overlays = [ midgard-lib.overlays.default ];
+      inherit (nixpkgs) lib;
+      pkgs = import nixpkgs { system = "x86_64-linux"; };
+      treefmtEval = treefmt-nix.lib.evalModule pkgs {
+        projectRootFile = "flake.nix";
+        programs.nixfmt.enable = true;
       };
-      inherit (pkgs.midgard.lib) importDir;
+      # Local importDir using path concatenation (dir + "/${n}") instead of
+      # string interpolation ("${dir}/${n}"). String interpolation copies the
+      # directory to a separate store path that can be garbage-collected,
+      # breaking `nix flake check`. Path concatenation keeps it as a subpath
+      # of the flake source.
+      importDir =
+        dir:
+        lib.mapAttrs' (n: _: lib.nameValuePair (lib.removeSuffix ".nix" n) (import (dir + "/${n}"))) (
+          builtins.readDir dir
+        );
     in
     {
       nixosModules =
@@ -78,19 +91,17 @@
 
       checks."x86_64-linux" = import ./tests inputs;
 
+      formatter."x86_64-linux" = treefmtEval.config.build.wrapper;
+
       templates = import ./templates;
 
       herculesCI = { };
 
-      devShells."x86_64-linux".default =
-        let
-          pkgs = import nixpkgs { system = "x86_64-linux"; };
-        in
-        pkgs.mkShell {
-          packages = with pkgs; [
-            age
-            sops
-          ];
-        };
+      devShells."x86_64-linux".default = pkgs.mkShell {
+        packages = with pkgs; [
+          age
+          sops
+        ];
+      };
     };
 }
