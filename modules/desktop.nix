@@ -25,7 +25,10 @@ in
   };
 
   config = mkIf (cfg.desktop != null) (mkMerge [
-    { services.xserver.enable = true; }
+    # NixOS 25.11: All desktop options (GNOME 49, Plasma 6, Sway) are
+    # Wayland-based and do not require services.xserver.enable. XWayland
+    # is provided automatically where needed. If a future desktop option
+    # requires X11, add services.xserver.enable inside that specific block.
 
     (mkIf (cfg.desktop == "gnome") {
       services = {
