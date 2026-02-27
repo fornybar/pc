@@ -37,8 +37,6 @@
 
     nvidia = {
       open = lib.mkDefault true;
-      package = lib.mkDefault config.boot.kernelPackages.nvidiaPackages.stable;
-
       prime = {
         intelBusId = "PCI:0:2:0"; # pci@0000:00:02.0
         nvidiaBusId = "PCI:1:0:0"; # pci@0000:01:00.0
