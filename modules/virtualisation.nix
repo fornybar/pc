@@ -1,4 +1,4 @@
-{ modulesPath, config, ... }:
+{ modulesPath, ... }:
 # Have to start VM with sudo if /etc/age is own by root
 {
   virtualisation.vmVariant = {

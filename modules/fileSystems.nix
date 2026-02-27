@@ -4,7 +4,7 @@
     fsType = "ext4";
   };
 
-  fileSystems."/boot/efi" ={
+  fileSystems."/boot/efi" = {
     label = "boot";
     fsType = "vfat";
   };

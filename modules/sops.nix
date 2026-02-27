@@ -1,20 +1,31 @@
-{ self, pkgs, lib, sops-nix, midgardUsers, ... }:
+{
+  self,
+  pkgs,
+  lib,
+  sops-nix,
+  midgardUsers,
+  ...
+}:
 {
 
-  imports = [ 
+  imports = [
     sops-nix.nixosModules.sops
   ];
 
   environment.systemPackages = [ pkgs.sops ];
 
-  sops.age.keyFile = "/root/.config/sops/age/keys.txt";
-  sops.defaultSopsFile = "${self}/secrets.yaml";
-
-  sops.secrets = lib.mkMerge ([
-    { github-token = { }; } # github-token for root/system
-  ] ++ (map (name:{
-    "${name}/github-token".owner = name;
-    "${name}/password".neededForUsers = true;
-  }) midgardUsers));
+  sops = {
+    age.keyFile = "/root/.config/sops/age/keys.txt";
+    defaultSopsFile = "${self}/secrets.yaml";
+    secrets = lib.mkMerge (
+      [
+        { github-token = { }; } # github-token for root/system
+      ]
+      ++ (map (name: {
+        "${name}/github-token".owner = name;
+        "${name}/password".neededForUsers = true;
+      }) midgardUsers)
+    );
+  };
 
 }

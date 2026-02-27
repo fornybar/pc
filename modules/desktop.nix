@@ -16,16 +16,19 @@ in
         with types;
         nullOr (enum [
           "gnome"
-          "plasma"
+          "plasma6"
           "sway"
         ]);
       default = "gnome";
-      description = ''Which dekstop to use "gnome", "plasma" or null'';
+      description = ''Which desktop to use: "gnome", "plasma6", "sway", or null'';
     };
   };
 
   config = mkIf (cfg.desktop != null) (mkMerge [
-    { services.xserver.enable = true; }
+    # NixOS 25.11: All desktop options (GNOME 49, Plasma 6, Sway) are
+    # Wayland-based and do not require services.xserver.enable. XWayland
+    # is provided automatically where needed. If a future desktop option
+    # requires X11, add services.xserver.enable inside that specific block.
 
     (mkIf (cfg.desktop == "gnome") {
       services = {
@@ -34,19 +37,17 @@ in
       };
 
       # Remove unused programs
-      environment.gnome.excludePackages = (
-        with pkgs;
-        [
-          epiphany # webbrowser use firefox
-          geary # email reader
-        ]
-      );
+      environment.gnome.excludePackages = with pkgs; [
+        epiphany # webbrowser use firefox
+        geary # email reader
+      ];
     })
 
-    (mkIf (cfg.desktop == "plasma") {
-      services.xserver = {
-        displayManager.sddm.enable = true;
-        desktopManager.plasma5.enable = true;
+    (mkIf (cfg.desktop == "plasma6") {
+      services.desktopManager.plasma6.enable = true;
+      services.displayManager.sddm = {
+        enable = true;
+        wayland.enable = true;
       };
     })
 
@@ -55,14 +56,10 @@ in
       security.pam.services.swaylock = { };
       programs.light.enable = true;
 
-      users.users = mapHomeManagerUsers (
-        name: user: {
-          extraGroups = [ "video" ];
-        }
-      );
+      users.users = mapHomeManagerUsers (_: _: { extraGroups = [ "video" ]; });
       environment.sessionVariables.GTK_USE_PORTAL = "1";
       home-manager.users = mapHomeManagerUsers (
-        name: user: {
+        _: _: {
           wayland.windowManager.sway = {
             enable = true;
             config = rec {
@@ -90,7 +87,7 @@ in
         enable = true;
         settings = {
           default_session.command = ''
-            ${pkgs.greetd.tuigreet}/bin/tuigreet \
+            ${pkgs.tuigreet}/bin/tuigreet \
               --time \
               --asterisks \
               --user-menu \

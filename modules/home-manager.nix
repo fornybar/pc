@@ -1,29 +1,37 @@
-{ config, lib, home-manager, mapUsers, ... }:
+{
+  config,
+  lib,
+  home-manager,
+  mapUsers,
+  ...
+}:
 with lib;
 
 let
   cfg = config.midgard.pc.users;
 
-  mapHomeManagerUsers = attrsFun: mapUsers (name: user:
-    mkIf cfg."${name}".home-manager.enable (attrsFun name user)
-  );
+  mapHomeManagerUsers =
+    attrsFun: mapUsers (name: user: mkIf cfg."${name}".home-manager.enable (attrsFun name user));
 
   userOpts = {
     options.home-manager = mkOption {
-      type = with types; submodule {
-        options = {
-          enable = mkOption {
-            type = types.bool;
-            example = true;
-            default = true;
-            description = "Enable home-manager";
+      type =
+        with types;
+        submodule {
+          options = {
+            enable = mkOption {
+              type = types.bool;
+              example = true;
+              default = true;
+              description = "Enable home-manager";
+            };
           };
         };
-      };
       default = { };
     };
   };
-in {
+in
+{
 
   imports = [
     home-manager.nixosModules.home-manager
@@ -38,14 +46,18 @@ in {
   config = {
     _module.args = { inherit mapHomeManagerUsers; };
 
-    home-manager.useGlobalPkgs = true;
-    home-manager.useUserPackages = true;
-
-    home-manager.users = mapHomeManagerUsers (name: user: {
-      home.stateVersion = config.system.stateVersion;
-
-      home.username = user.name;
-      home.homeDirectory = config.users.users."${name}".home;
-    });
+    home-manager = {
+      useGlobalPkgs = true;
+      useUserPackages = true;
+      users = mapHomeManagerUsers (
+        name: user: {
+          home = {
+            inherit (config.system) stateVersion;
+            username = user.name;
+            homeDirectory = config.users.users."${name}".home;
+          };
+        }
+      );
+    };
   };
 }

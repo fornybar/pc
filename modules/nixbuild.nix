@@ -3,7 +3,8 @@ with lib;
 
 let
   cfg = config.midgard.pc.nixbuild;
-in {
+in
+{
   options.midgard.pc.nixbuild = {
     enable = mkOption {
       type = types.bool;
@@ -27,11 +28,11 @@ in {
     };
 
     programs.ssh.extraConfig = ''
-    Host eu.nixbuild.net
-      PubkeyAcceptedKeyTypes ssh-ed25519
-      ServerAliveInterval 60
-      IPQoS throughput
-      IdentityFile ${cfg.sshKeyPath}
+      Host eu.nixbuild.net
+        PubkeyAcceptedKeyTypes ssh-ed25519
+        ServerAliveInterval 60
+        IPQoS throughput
+        IdentityFile ${cfg.sshKeyPath}
     '';
 
     programs.ssh.knownHosts = {
@@ -48,16 +49,27 @@ in {
           hostName = "eu.nixbuild.net";
           system = "x86_64-linux";
           maxJobs = 100;
-          supportedFeatures = [ "benchmark" "big-parallel" "kvm" "nixos-test" ];
+          supportedFeatures = [
+            "benchmark"
+            "big-parallel"
+            "kvm"
+            "nixos-test"
+          ];
         }
         {
           hostName = "eu.nixbuild.net";
           system = "aarch64-linux";
           maxJobs = 100;
-          supportedFeatures = [ "benchmark" "big-parallel" "kvm" "nixos-test" ];
+          supportedFeatures = [
+            "benchmark"
+            "big-parallel"
+            "kvm"
+            "nixos-test"
+          ];
         }
       ];
-      settings = { # Use nixbuild as subsituter
+      settings = {
+        # Use nixbuild as subsituter
         substituters = lib.mkOrder 2000 [ "ssh://eu.nixbuild.net" ];
         trusted-public-keys = [ "nixbuild.net/eviny-1:szqbKzWjc/GMADWn3BYNEDj6HGPPcSAdzH1DX12Blu0=" ];
       };

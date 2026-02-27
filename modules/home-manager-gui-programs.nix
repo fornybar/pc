@@ -1,11 +1,13 @@
 { pkgs, mapHomeManagerUsers, ... }:
 {
-  home-manager.users = mapHomeManagerUsers (name: user: {
-    programs = {
-      chromium = {
-        enable = true;
-        package = pkgs.google-chrome;
+  home-manager.users = mapHomeManagerUsers (
+    _: _: {
+      programs = {
+        chromium = {
+          enable = true;
+          package = pkgs.google-chrome;
+        };
       };
-    };
-  });
+    }
+  );
 }
