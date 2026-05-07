@@ -66,6 +66,7 @@
               ./modules/local.nix
               ./modules/nix-access-tokens.nix
               ./modules/ssh.nix
+              ./modules/security
             ];
           };
           terminal = {
