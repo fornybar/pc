@@ -6,6 +6,9 @@
     sops-nix.inputs.nixpkgs.follows = "nixpkgs";
     treefmt-nix.url = "github:numtide/treefmt-nix";
     treefmt-nix.inputs.nixpkgs.follows = "nixpkgs";
+    nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
+    lanzaboote.url = "github:nix-community/lanzaboote";
+    lanzaboote.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   outputs =
@@ -63,6 +66,7 @@
               ./modules/local.nix
               ./modules/nix-access-tokens.nix
               ./modules/ssh.nix
+              ./modules/security
             ];
           };
           terminal = {
