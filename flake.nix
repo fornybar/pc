@@ -95,6 +95,25 @@
 
       templates = import ./templates;
 
+      apps."x86_64-linux".backup =
+        let
+          script = pkgs.writeShellApplication {
+            name = "pc-backup";
+            runtimeInputs = with pkgs; [
+              azure-cli
+              rclone
+              coreutils
+              gawk
+              sudo
+            ];
+            text = builtins.readFile ./scripts/backup.sh;
+          };
+        in
+        {
+          type = "app";
+          program = "${script}/bin/pc-backup";
+        };
+
       herculesCI = { };
 
       devShells."x86_64-linux".default = pkgs.mkShell {
