@@ -25,7 +25,7 @@ in
   };
 
   config = mkIf (cfg.desktop != null) (mkMerge [
-    # NixOS 25.11: All desktop options (GNOME 49, Plasma 6, Sway) are
+    # NixOS 26.05: All desktop options (GNOME 50, Plasma 6, Sway) are
     # Wayland-based and do not require services.xserver.enable. XWayland
     # is provided automatically where needed. If a future desktop option
     # requires X11, add services.xserver.enable inside that specific block.
@@ -54,7 +54,7 @@ in
     (mkIf (cfg.desktop == "sway") {
       security.polkit.enable = true;
       security.pam.services.swaylock = { };
-      programs.light.enable = true;
+      hardware.acpilight.enable = mkDefault true;
 
       users.users = mapHomeManagerUsers (_: _: { extraGroups = [ "video" ]; });
       environment.sessionVariables.GTK_USE_PORTAL = "1";
