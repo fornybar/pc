@@ -1,6 +1,6 @@
-# Developer PC Backup
+# Developer PC Backup & Restore
 
-Back up developer PC state to Azure Blob Storage using `rclone`. Each developer's backup is isolated to their own directory via ADLS Gen2 ACLs — only the user who created the backup (and admins) can access it.
+Back up and restore developer PC state to Azure Blob Storage using `rclone`. Each developer's backup is isolated to their own directory via ADLS Gen2 ACLs — only the user who created the backup (and admins) can access it.
 
 ## Prerequisites
 
@@ -11,11 +11,11 @@ Back up developer PC state to Azure Blob Storage using `rclone`. Each developer'
 
 | Category | Paths | Notes |
 |---|---|---|
-| Home directory | `~/` (entire home) | Excludes caches, `node_modules`, `target/`, `.venv/`, `.git/objects/`, disk images, Nix store paths |
-| SOPS age keys | `/root/.config/sops/` | Requires `sudo` |
+| Home directory | `~/` (entire home) | Excludes caches, build artifacts, docker volumes, `.git/objects/`, disk images, LLM models |
+| SOPS age keys | `/root/.config/sops/` | Elevated via sudo; critical for secret decryption |
 | System state | `/etc/machine-id`, `/etc/nixos/` | Machine identity and NixOS config |
-| Secure Boot | `/var/lib/sbctl/` | Only if Secure Boot is enabled; requires `sudo` |
-| Browser profiles | `~/.mozilla/firefox/`, `~/.config/google-chrome/`, `~/.config/chromium/` | Excluded by default — prompted interactively with size estimate |
+| Secure Boot | `/var/lib/sbctl/` | Only if Secure Boot is enabled; elevated via sudo |
+| Browser profiles | Firefox, Chrome, Chromium, Edge | Excluded by default — prompted interactively with size estimate |
 
 ## Running a backup
 
@@ -33,9 +33,30 @@ nix run .#backup -- --include-browser    # skip the interactive browser prompt
 nix run .#backup -- --verbose            # show detailed output for each step
 ```
 
+## Restoring from backup
+
+```bash
+nix run .#restore
+```
+
+Or with options:
+
+```bash
+nix run .#restore -- --list                          # list available backups
+nix run .#restore -- --dry-run                       # preview full restore
+nix run .#restore -- sops                            # restore only SOPS keys
+nix run .#restore -- home sops                       # restore home and SOPS keys
+nix run .#restore -- --from-host old-pc home         # restore home from a different machine
+nix run .#restore -- --from-user alice --from-host x # restore from another user's backup (admins only)
+```
+
+Available categories: `home`, `sops`, `system`. If none specified, all are restored.
+
+Restore uses `rclone copy` (additive) — it only adds or updates files, never deletes local files that aren't in the backup.
+
 ## Where backups are stored
 
-Backups are synced to the `devpcs` Azure storage account in the `developer-pcs` container:
+Backups are synced to the `devpcs5111c8c6` Azure storage account (dev subscription) in the `developer-pcs` container:
 
 ```
 developer-pcs/
@@ -49,7 +70,7 @@ developer-pcs/
         sbctl/
 ```
 
-Each run uses `rclone sync`, so the destination always reflects the current state of the machine. Azure Blob versioning can be enabled on the storage account if historical snapshots are needed.
+Each backup run uses `rclone sync`, so the destination always reflects the current state of the machine.
 
 ## Access control
 
@@ -61,23 +82,6 @@ The storage account uses ADLS Gen2 (hierarchical namespace). No RBAC data-plane 
 
 This means developers can create their own backup directories but cannot read other developers' backups.
 
-## Restoring from backup
-
-To restore files from a backup, use `rclone copy` in the opposite direction:
-
-```bash
-# Set up auth (same as the backup script)
-export RCLONE_AZUREBLOB_ACCOUNT="devpcs$(az account show --query 'id' -o tsv | cut -c1-8)"
-export RCLONE_AZUREBLOB_ENV_AUTH="true"
-
-# List what's in your backup
-rclone ls "azureblob:developer-pcs/$(whoami)/$(hostname)/"
-
-# Restore specific files
-rclone copy "azureblob:developer-pcs/$(whoami)/$(hostname)/home/.ssh/" ~/.ssh/
-rclone copy "azureblob:developer-pcs/$(whoami)/$(hostname)/sops/" /root/.config/sops/ --sudo
-```
-
 ## Infrastructure
 
-The storage account and ACL configuration are defined in [yggdrasil](https://github.com/fornybar/yggdrasil) at `ginnungagap/main.tf.nix`.
+The storage account and ACL configuration are defined in [yggdrasil](https://github.com/fornybar/yggdrasil) at `ginnungagap/devpcs.dev.tf.nix` (dev-only).
