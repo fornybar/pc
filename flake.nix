@@ -114,6 +114,24 @@
           program = "${script}/bin/pc-backup";
         };
 
+      apps."x86_64-linux".restore =
+        let
+          script = pkgs.writeShellApplication {
+            name = "pc-restore";
+            runtimeInputs = with pkgs; [
+              azure-cli
+              rclone
+              coreutils
+              gawk
+            ];
+            text = builtins.readFile ./scripts/restore.sh;
+          };
+        in
+        {
+          type = "app";
+          program = "${script}/bin/pc-restore";
+        };
+
       herculesCI = { };
 
       devShells."x86_64-linux".default = pkgs.mkShell {
