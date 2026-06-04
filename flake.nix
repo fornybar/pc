@@ -33,12 +33,19 @@
         lib.mapAttrs' (n: _: lib.nameValuePair (lib.removeSuffix ".nix" n) (import (dir + "/${n}"))) (
           builtins.readDir dir
         );
+      securityModule = {
+        imports = [
+          inputs.lanzaboote.nixosModules.lanzaboote
+          ./modules/security
+        ];
+      };
     in
     {
       nixosModules =
         import ./hardware
         // importDir ./modules
         // {
+          security = securityModule;
           default = {
             # Need to use path insted of self.nixosModules.xxxx
             # so it is possible to disable modules
@@ -65,7 +72,7 @@
               ./modules/local.nix
               ./modules/nix-access-tokens.nix
               ./modules/ssh.nix
-              ./modules/security
+              securityModule
             ];
           };
           terminal = {
