@@ -2,7 +2,6 @@
   config,
   lib,
   pkgs,
-  inputs,
   ...
 }:
 with lib;
@@ -11,8 +10,6 @@ let
   cfg = config.midgard.pc.security.secureboot;
 in
 {
-  imports = [ inputs.lanzaboote.nixosModules.lanzaboote ];
-
   options.midgard.pc.security.secureboot = {
     enable = mkEnableOption "Secure Boot via lanzaboote";
 
