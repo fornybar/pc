@@ -39,7 +39,7 @@ Make sure:
 Before enabling Secure Boot, make sure the host flake follows the latest `pc` version:
 
 ```bash
-nix flake lock --update-input pc
+nix flake update pc
 ```
 
 Then rebuild once:
@@ -65,7 +65,7 @@ inputs.lanzaboote.url = "github:nix-community/lanzaboote/v1.0.0";
 If you are editing `pc` itself, update its lock file:
 
 ```bash
-nix flake lock --update-input lanzaboote
+nix flake update lanzaboote
 ```
 
 Check that the `pc` lock file uses `v1.0.0`:
