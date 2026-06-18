@@ -53,7 +53,6 @@
             imports = [
               ./modules/nix.nix
               ./modules/users.nix
-              ./modules/fileSystems.nix
               ./modules/keyboard.nix
               ./modules/sops.nix
               ./modules/desktop.nix
