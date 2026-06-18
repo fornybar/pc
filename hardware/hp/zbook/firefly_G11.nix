@@ -9,18 +9,11 @@
 
 {
   imports = [
-    (modulesPath + "/installer/scan/not-detected.nix")
     nixos-hardware.nixosModules.common-gpu-nvidia-sync
     "${nixos-hardware}/common/pc/laptop"
     "${nixos-hardware}/common/pc/ssd"
     "${nixos-hardware}/common/cpu/intel"
     "${nixos-hardware}/common/gpu/nvidia"
-  ];
-
-  # Path must be according to modules/fileSystems.nix
-  fileSystems."/boot".options = [
-    "fmask=0022"
-    "dmask=0022"
   ];
 
   networking.useDHCP = lib.mkDefault true;
@@ -48,15 +41,6 @@
     enableRedistributableFirmware = lib.mkDefault true;
   };
 
-  boot.initrd.availableKernelModules = [
-    "xhci_pci"
-    "thunderbolt"
-    "nvme"
-    "usb_storage"
-    "sd_mod"
-  ];
-
-  boot.kernelModules = [ "kvm-intel" ];
 
   # GNOME 49 (NixOS 25.11) is Wayland-only; the previous gdm.wayland=false
   # workaround no longer produces a functional session. NVIDIA+Wayland may
