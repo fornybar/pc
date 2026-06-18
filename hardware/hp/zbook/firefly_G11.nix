@@ -18,7 +18,7 @@
   ];
 
   # Path must be according to modules/fileSystems.nix
-  fileSystems."/boot/efi".options = [
+  fileSystems."/boot".options = [
     "fmask=0022"
     "dmask=0022"
   ];
