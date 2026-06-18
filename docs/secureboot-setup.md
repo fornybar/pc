@@ -166,7 +166,7 @@ sudo nixos-rebuild switch --flake .#<hostname> --override-input pc ~/fornybar/pc
 Run:
 
 ```bash
-bootctl status
+sudo bootctl status
 sudo sbctl status
 sudo sbctl verify
 ```
@@ -239,7 +239,7 @@ systemctl reboot
 After boot, check:
 
 ```bash
-bootctl status
+sudo bootctl status
 ```
 
 Expected shape:
@@ -289,7 +289,7 @@ After boot, verify:
 
 ```bash
 sudo sbctl status
-bootctl status | grep -i 'Secure Boot'
+sudo bootctl status | grep -i 'Secure Boot'
 ```
 
 Expected:
