@@ -85,7 +85,7 @@ Expected shape:
 }
 ```
 
-## 3. Create Secure Boot keys
+## 3. Set up new Secure Boot keys
 
 Run this on the target machine:
 
@@ -104,31 +104,9 @@ Keys are stored in:
 
 Keep this directory. If it is deleted, the machine can lose the keys needed for Secure Boot.
 
-Check whether Microsoft/vendor keys are enrolled:
+### 3.1. Clear Secure Boot keys
 
-```bash
-sudo sbctl status
-```
-
-If `Vendor Keys` does not say `microsoft`, go to [Entering Setup Mode](#entering-setup-mode) and enroll Microsoft keys.
-
-If `Vendor Keys` already says `microsoft`, do not clear Secure Boot keys and do not enroll again.
-
-## Entering Setup Mode
-
-Use this section only if `Vendor Keys` does not say `microsoft` in `sudo sbctl status`. Setup Mode lets firmware accept new Secure Boot keys.
-
-Check status with:
-
-```bash
-sudo sbctl status
-```
-
-If `Vendor Keys` already says `microsoft`, skip this section and continue with step 4. If it does not say `microsoft`, follow the steps below.
-
-### 1. Enter Setup Mode
-
-Open BIOS/UEFI settings and clear the Secure Boot key database. The exact menu is PC-dependent. Look for options like:
+First we enter Setup Mode. Setup Mode lets firmware accept new Secure Boot keys. Open BIOS/UEFI settings and clear the Secure Boot key database. The exact menu is PC-dependent. Look for options like:
 
 - `Clear Secure Boot Keys`
 - `Delete All Secure Boot Keys`
@@ -143,12 +121,12 @@ On some HP machines this option may be locked by HP Sure Start:
 5. Go to **Security → Secure Boot Configuration**.
 6. Clear Secure Boot keys.
 
-### 2. Enroll Microsoft keys
+### 3.2. Enroll Secure Boot keys
 
 After clearing keys, boot NixOS and enroll keys:
 
 ```bash
-sudo sbctl enroll-keys --microsoft
+sudo sbctl enroll-keys --microsoft --firmware-builtin
 sudo sbctl status
 ```
 
@@ -305,8 +283,7 @@ Then:
 
 1. Find Secure Boot settings.
 2. Enable Secure Boot.
-3. Do not clear keys if `sbctl status` already showed `Vendor Keys: microsoft`. If it did not, complete [Entering Setup Mode](#entering-setup-mode) before enabling Secure Boot.
-4. Save and boot.
+3. Save and boot.
 
 After boot, verify:
 
