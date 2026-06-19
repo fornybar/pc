@@ -105,6 +105,26 @@
 
       templates = import ./templates;
 
+      apps."x86_64-linux".setup =
+        let
+          script = pkgs.writeShellApplication {
+            name = "pc-setup";
+            runtimeInputs = with pkgs; [
+              git
+              gh
+              jq
+              sbctl
+              sops
+              coreutils
+            ];
+            text = builtins.readFile ./scripts/setup.sh;
+          };
+        in
+        {
+          type = "app";
+          program = "${script}/bin/pc-setup";
+        };
+
       apps."x86_64-linux".backup =
         let
           script = pkgs.writeShellApplication {

@@ -1,6 +1,4 @@
-#! /usr/bin/env nix-shell
-#! nix-shell -i bash -p bash git gh jq sbctl
-
+# shellcheck shell=bash
 set -e
 
 # Setup git with github
