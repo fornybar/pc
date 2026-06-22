@@ -72,6 +72,7 @@
               ./modules/local.nix
               ./modules/nix-access-tokens.nix
               ./modules/ssh.nix
+              ./modules/tailscale.nix
               securityModule
             ];
           };
