@@ -22,13 +22,13 @@ let
     ];
     text = ''
       tailscale_login() {
-        local flags="--login-server=$1 --accept-routes"
+        local flags=(--login-server="$1" --accept-routes)
         if [ -n "''${2:-}" ]; then
-          flags="--authkey=$2 $flags"
+          flags=(--authkey="$2" "''${flags[@]}")
         else
-          flags="--force-reauth $flags"
+          flags=(--force-reauth "''${flags[@]}")
         fi
-        sudo tailscale up $flags 2>&1 | while IFS= read -r line; do
+        sudo tailscale up "''${flags[@]}" 2>&1 | while IFS= read -r line; do
           echo "$line"
           url=$(echo "$line" | grep -oE 'https://[^ ]+' || true)
           if [ -n "$url" ]; then
