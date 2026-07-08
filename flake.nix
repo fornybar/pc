@@ -53,7 +53,6 @@
             imports = [
               ./modules/nix.nix
               ./modules/users.nix
-              ./modules/fileSystems.nix
               ./modules/keyboard.nix
               ./modules/sops.nix
               ./modules/desktop.nix
@@ -105,6 +104,26 @@
       formatter."x86_64-linux" = treefmtEval.config.build.wrapper;
 
       templates = import ./templates;
+
+      apps."x86_64-linux".setup =
+        let
+          script = pkgs.writeShellApplication {
+            name = "pc-setup";
+            runtimeInputs = with pkgs; [
+              git
+              gh
+              jq
+              sbctl
+              sops
+              coreutils
+            ];
+            text = builtins.readFile ./scripts/setup.sh;
+          };
+        in
+        {
+          type = "app";
+          program = "${script}/bin/pc-setup";
+        };
 
       apps."x86_64-linux".backup =
         let
