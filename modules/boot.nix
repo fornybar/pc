@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, lib, ... }:
 {
   boot = {
     kernelPackages = pkgs.linuxPackages_latest;
@@ -9,7 +9,7 @@
       };
       efi = {
         canTouchEfiVariables = true;
-        efiSysMountPoint = "/boot";
+        efiSysMountPoint = lib.mkDefault "/boot";
       };
     };
     tmp.cleanOnBoot = true;
