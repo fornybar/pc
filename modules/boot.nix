@@ -3,6 +3,7 @@
   boot = {
     kernelPackages = pkgs.linuxPackages_latest;
     loader = {
+      timeout = lib.mkDefault 1;
       systemd-boot = {
         enable = true;
         configurationLimit = 10;
