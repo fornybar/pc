@@ -15,20 +15,22 @@ let
       team_id=$(grep '^TeamID' "$config" | cut -d'"' -f2)
       [ -n "$team_id" ] && exit 0
     fi
-    exec ${pkgs.paretosecurity}/bin/paretosecurity link '${cfg.inviteUrl}'
+    invite_url="$(${pkgs.coreutils}/bin/cat -- ${escapeShellArg cfg.inviteUrlFile})"
+    exec ${pkgs.paretosecurity}/bin/paretosecurity link "$invite_url"
   '';
 in
 {
   options.midgard.pc.security.paretosecurity = {
     enable = mkEnableOption "ParetoSecurity agent";
 
-    inviteUrl = mkOption {
+    inviteUrlFile = mkOption {
       type = with types; nullOr str;
       default = null;
       description = ''
-        Team invite URL for automatic device enrollment.
+        Path to a file containing the team invite URL for automatic device enrollment.
         Format: paretosecurity://linkDevice?invite_id=<ID>
         Obtain from the ParetoSecurity team dashboard or Keeper vault.
+        Use a sops-nix secret path to keep the URL out of the Nix store.
         If unset, run paretosecurity link <url> manually after install.
       '';
     };
@@ -37,7 +39,7 @@ in
   config = mkIf cfg.enable {
     environment.systemPackages = [ pkgs.paretosecurity ];
 
-    systemd.user.services.paretosecurity-link = mkIf (cfg.inviteUrl != null) {
+    systemd.user.services.paretosecurity-link = mkIf (cfg.inviteUrlFile != null) {
       description = "Link device to ParetoSecurity team";
       wantedBy = [ "default.target" ];
       serviceConfig = {
