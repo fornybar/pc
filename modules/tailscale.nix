@@ -44,8 +44,15 @@ let
         local config_file="$config_dir/tailscale"
         mkdir -p "$config_dir"
 
+        local status
+        status=$(tailscale status --json 2>/dev/null) || true
+
+        local magic_dns_suffix
+        magic_dns_suffix=$(printf '%s' "$status" \
+          | jq -r '.CurrentTailnet.MagicDNSSuffix // empty' 2>/dev/null) || true
+
         local peers
-        peers=$(tailscale status --json 2>/dev/null \
+        peers=$(printf '%s' "$status" \
           | jq -r '.Peer[] | select(.Online) | .HostName' 2>/dev/null) || true
 
         if [ -z "$peers" ]; then
@@ -66,6 +73,9 @@ let
           for host in $peers; do
             echo "Host $host"
             echo "  User $ssh_user"
+            if [ -n "$magic_dns_suffix" ]; then
+              echo "  HostKeyAlias $host.$magic_dns_suffix"
+            fi
             echo ""
           done
         } > "$config_file"
