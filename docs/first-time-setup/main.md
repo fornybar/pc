@@ -23,10 +23,14 @@ For detailed background, debugging steps, and recovery notes, see the [setup ref
   - If this fails you can try subsequently down the list
 - Follow instructions from installer
   - Unfree: Allow this
-  - Partitions: Erase disk. We recommend to include swap with no hibernate.
+  - Partitions: Erase disk. We recommend to `include swap` with `no hibernate`. Enable `Encrypt system` (small check box).
 - Reboot when installer is done
 
-> More detail: [Installing NixOS](./reference.md#installing-nixos).
+> More details: [Installing NixOS](./reference.md#installing-nixos).
+
+<img src="./nixos-install-disk-encryption.png" width="600">
+
+*Use this checkbox to enable full disk encryption (LUKS)*
 
 ## 3. Run setup
 Run
@@ -35,6 +39,12 @@ nix run --extra-experimental-features 'nix-command flakes' github:fornybar/pc#se
 ```
 
 This takes us through the following steps. Note, this script exits when manual interaction is requires. Then, perform the necessary actions and re-run the script.
+
+> [!TIP]
+> If the setup script fails, you can execute the commands in scripts/setup.sh step-by-step manually for debugging. To avoid having to reinitialize environment variables every time you download a required package and enter a new shell, you can run once:
+> ```bash
+> nix-shell -p jq git gh sops sbctl age
+> ```
 
 ### 3.1. Get personal pc repo from GitHub
 
@@ -46,13 +56,21 @@ See [Connecting to the internet](./reference.md#connecting-to-the-internet) if y
 
 Copy `/etc/nixos/hardware-configuration.nix` into your pc repo and make sure you include the module in your NixOS configuration.
 
-Include swap devices in luks encryption config
+Include luks devices in luks encryption config
 
 ```nix
-boot.initrd.luks.devices."luks-<swap-partition-id>" = {
-  device = "/dev/disk/by-uuid/<swap-partition-id>";
+boot.initrd.luks.devices."luks-<luksUUID>" = {
+  device = "/dev/disk/by-uuid/<luksUUID>";
 };
 ```
+
+> [!TIP]
+> ```bash
+> lsblk -f
+> sudo cryptsetup isLuks /dev/<device> && echo "LUKS encrypted"
+> sudo cryptsetup luksUUID "/dev/<device>" # Eg. nvme0n1p<N>
+> ```
+> If you forgot to enable encryption in the installer, we recommended to reinstall nixos and enable it through the installer for simplicity instead of partitioning and encrypting your devices manually.
 
 ### 3.3. Set up sops age key
 
@@ -71,11 +89,14 @@ Then in `./personal_pc_repo`
 3. Run `sudo sops secrets.yaml`.
 4. Delete all lines.
 5. Fill out values according to the templates in this repo: [secrets.tmp.yaml](/templates/hardware/secrets.tmp.yaml):
-   - github-token: generate github token with access *admin.org, repo, workflow*, and remember to authorize fornybar organization
+   - github-token: generate a fine-grained token. Select `All repositories` and add `actions` (R&W), `administration` (R), `contents` (R&W), `issues` (R&W), `pull request` (R&W) and `workflows` (R&W). You can modify the token later. Set fornybar organization as the owner. Remember to authorize fornybar organization.
    - password: run `mkpasswd -m sha-512 <passord>` and pass result
    - nixbuild-ssh: "" (leave empty)
 
 > Reusing an existing key or reading the public key: see [Setting up the sops age key](./reference.md#setting-up-the-sops-age-key).
+
+> [!TIP]
+> `<root_github_token>` and `<user_github_token>` in secrets.yaml can use the same fine-grained token.
 
 ### 3.4. NixOS rebuild boot
 
