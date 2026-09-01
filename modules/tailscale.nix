@@ -22,9 +22,9 @@ let
     ];
     text = ''
       tailscale_login() {
-        local flags=(--login-server="$1" --accept-routes)
-        if [ -n "''${2:-}" ]; then
-          flags=(--authkey="$2" "''${flags[@]}")
+        local flags=(--login-server="$1" --accept-routes --accept-dns="$2")
+        if [ -n "''${3:-}" ]; then
+          flags=(--authkey="$3" "''${flags[@]}")
         else
           flags=(--force-reauth "''${flags[@]}")
         fi
@@ -92,20 +92,31 @@ let
       }
 
       case "''${1:-status}" in
-        ${concatStringsSep "\n        " (mapAttrsToList (name: net:
-          ''${name})
-            ${if net.authKeyFile != null then ''
-            AUTH_KEY=$(sudo cat ${net.authKeyFile} 2>/dev/null) || true
-            if [ -z "$AUTH_KEY" ]; then
-              echo "error: auth key not available at ${net.authKeyFile}" >&2
-              exit 1
-            fi
-            tailscale_login "${net.loginServer}" "$AUTH_KEY"
-            '' else ''
-            tailscale_login "${net.loginServer}"
-            ''}${optionalString (net.sshUser != null) ''
-            update_ssh_config "${net.sshUser}"${optionalString (net.sshLoadKeyCommand != null) " ${net.sshLoadKeyCommand}"}
-            ''};;'') cfg.tailnets)}
+        ${concatStringsSep "\n        " (
+          mapAttrsToList (name: net: ''
+            ${name})
+                        ${
+                          if net.authKeyFile != null then
+                            ''
+                              AUTH_KEY=$(sudo cat ${net.authKeyFile} 2>/dev/null) || true
+                              if [ -z "$AUTH_KEY" ]; then
+                                echo "error: auth key not available at ${net.authKeyFile}" >&2
+                                exit 1
+                              fi
+                              tailscale_login "${net.loginServer}" "${boolToString net.acceptDns}" "$AUTH_KEY"
+                            ''
+                          else
+                            ''
+                              tailscale_login "${net.loginServer}" "${boolToString net.acceptDns}"
+                            ''
+                        }${
+                          optionalString (net.sshUser != null) ''
+                            update_ssh_config "${net.sshUser}"${
+                              optionalString (net.sshLoadKeyCommand != null) " ${net.sshLoadKeyCommand}"
+                            }
+                          ''
+                        };;'') cfg.tailnets
+        )}
         status)
           tailscale status
           ;;
@@ -121,33 +132,40 @@ in
     enable = mkEnableOption "Tailscale client with tailnet switcher";
 
     tailnets = mkOption {
-      type = types.attrsOf (types.submodule {
-        options = {
-          loginServer = mkOption {
-            type = types.str;
-            description = "Full URL of the headscale/tailscale coordination server.";
-            example = "https://head.dev.fornybar.eviny.io";
+      type = types.attrsOf (
+        types.submodule {
+          options = {
+            loginServer = mkOption {
+              type = types.str;
+              description = "Full URL of the headscale/tailscale coordination server.";
+              example = "https://head.dev.fornybar.eviny.io";
+            };
+            acceptDns = mkOption {
+              type = types.bool;
+              default = true;
+              description = "Whether to accept DNS configuration from the tailnet.";
+            };
+            authKeyFile = mkOption {
+              type = types.nullOr types.str;
+              default = null;
+              description = "Path to a pre-auth key file. If set, uses authkey instead of OIDC browser flow.";
+              example = "/run/secrets/tailscale-auth-key";
+            };
+            sshUser = mkOption {
+              type = types.nullOr types.str;
+              default = null;
+              description = "If set, generates ~/.ssh/config.d/tailscale with this user for all peers after connecting.";
+              example = "odin";
+            };
+            sshLoadKeyCommand = mkOption {
+              type = types.nullOr types.str;
+              default = null;
+              description = "Command run via SSH Match exec before each connection to peers on this tailnet. Use to dynamically load keys into ssh-agent on demand. Requires sshUser to be set.";
+              example = "/run/current-system/sw/bin/ensure-asgard-key";
+            };
           };
-          authKeyFile = mkOption {
-            type = types.nullOr types.str;
-            default = null;
-            description = "Path to a pre-auth key file. If set, uses authkey instead of OIDC browser flow.";
-            example = "/run/secrets/tailscale-auth-key";
-          };
-          sshUser = mkOption {
-            type = types.nullOr types.str;
-            default = null;
-            description = "If set, generates ~/.ssh/config.d/tailscale with this user for all peers after connecting.";
-            example = "odin";
-          };
-          sshLoadKeyCommand = mkOption {
-            type = types.nullOr types.str;
-            default = null;
-            description = "Command run via SSH Match exec before each connection to peers on this tailnet. Use to dynamically load keys into ssh-agent on demand. Requires sshUser to be set.";
-            example = "/run/current-system/sw/bin/ensure-asgard-key";
-          };
-        };
-      });
+        }
+      );
       default = { };
       description = "Named tailnets available via the `ts` switcher command";
       example = literalExpression ''
