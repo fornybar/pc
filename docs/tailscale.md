@@ -14,7 +14,11 @@ midgard.pc.tailscale = {
       loginServer = "https://head.example.io";
       authKeyFile = "/run/secrets/tailscale-auth-key";
     };
-    dev  = { loginServer = "https://head.dev.example.io"; sshUser = "odin"; };
+    dev = {
+      loginServer = "https://head.dev.example.io";
+      acceptDns = false;
+      sshUser = "odin";
+    };
     prod = { loginServer = "https://head.example.io";     sshUser = "odin"; };
   };
 };
@@ -36,6 +40,7 @@ ts status  # show current tailscale status
 | Option | Type | Description |
 |--------|------|-------------|
 | `loginServer` | `str` | Full headscale/tailscale URL. |
+| `acceptDns` | `bool` | Whether to accept DNS configuration from the tailnet. Defaults to `true`. |
 | `authKeyFile` | `str \| null` | Path to a pre-auth key file. If set, uses authkey; otherwise opens an OIDC browser flow. |
 | `sshUser` | `str \| null` | If set, regenerates `~/.ssh/config.d/tailscale` after connecting with this user for all online peers. |
 | `sshLoadKeyCommand` | `str \| null` | Command run via `Match exec` before each SSH connection to peers on this tailnet. Use to dynamically load keys into ssh-agent without storing them on disk. Requires `sshUser`. |
