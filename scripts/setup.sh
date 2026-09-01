@@ -64,7 +64,7 @@ echo "Checking secureboot settings"
 ## Must be enabled for lanzaboote to sign boot files with new sbctl keys
 secureboot_enabled=$(nix eval \
     "$personal_pc_repo_path#nixosConfigurations.$nixos_configuration_name.config.midgard.pc.security.secureboot.enable" \
-    --option access-tokens "github.com=$(gh auth token)" 2>/dev/null) || secureboot_enabled="false"
+    --option access-tokens "github.com=$(gh auth token) --extra-experimental-features 'nix-command flakes'" 2>/dev/null) || secureboot_enabled="false"
 if [ "$secureboot_enabled" != "true" ]; then
     echo "ERROR: midgard.pc.security.secureboot.enable is not true for $nixos_configuration_name"
     echo "Enable Secure Boot via lanzaboote in your personal pc config before continuing."
