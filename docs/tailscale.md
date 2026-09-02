@@ -51,9 +51,11 @@ When `sshUser` is set, `ts <tailnet>` writes `~/.ssh/config.d/tailscale` with a 
 
 ```
 Host huginn
+  HostName 100.64.0.3
   User odin
 
 Host tor
+  HostName 100.64.0.6
   User odin
 ```
 
