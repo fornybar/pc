@@ -37,7 +37,7 @@ in
   };
 
   config = mkIf cfg.enable {
-    environment.systemPackages = [ pkgs.paretosecurity ];
+    services.paretosecurity.enable = true;
 
     systemd.user.services.paretosecurity-link = mkIf (cfg.inviteUrlFile != null) {
       description = "Link device to ParetoSecurity team";
