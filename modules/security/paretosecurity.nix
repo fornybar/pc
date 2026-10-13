@@ -39,6 +39,31 @@ in
   config = mkIf cfg.enable {
     environment.systemPackages = [ pkgs.paretosecurity ];
 
+    # Install Pareto's systemd units so its root helper can run privileged checks.
+    systemd.packages = [ pkgs.paretosecurity ];
+    systemd.sockets.paretosecurity = {
+      wantedBy = [ "sockets.target" ];
+      startLimitIntervalSec = 300;
+      startLimitBurst = 100;
+    };
+
+    # Run checks and send a team report each weekday at 10:00 local time.
+    systemd.user.timers.paretosecurity-user = {
+      description = "Run ParetoSecurity Check on weekdays";
+      wantedBy = [ "timers.target" ];
+      startLimitIntervalSec = 300;
+      startLimitBurst = 5;
+      timerConfig = {
+        # Clear the package's hourly trigger before replacing it with the weekday schedule.
+        OnCalendar = [
+          ""
+          "Mon..Fri *-*-* 10:00:00"
+        ];
+        # Run a missed check when the user session starts if the PC was off at 10:00.
+        Persistent = true;
+      };
+    };
+
     systemd.user.services.paretosecurity-link = mkIf (cfg.inviteUrlFile != null) {
       description = "Link device to ParetoSecurity team";
       wantedBy = [ "default.target" ];
