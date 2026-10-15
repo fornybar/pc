@@ -16,7 +16,7 @@ let
       [ -n "$team_id" ] && exit 0
     fi
     invite_url="$(${pkgs.coreutils}/bin/cat -- ${escapeShellArg cfg.inviteUrlFile})"
-    exec ${pkgs.paretosecurity}/bin/paretosecurity link "$invite_url"
+    exec ${config.services.paretosecurity.package}/bin/paretosecurity link "$invite_url"
   '';
 in
 {
@@ -38,6 +38,11 @@ in
 
   config = mkIf cfg.enable {
     services.paretosecurity.enable = true;
+    services.paretosecurity.package = pkgs.paretosecurity.overrideAttrs (prev: {
+      version = "0.3.21";
+      src = prev.src.override { hash = "sha256-pQ5p52Tf8MtCasTC4ZyDN3EaJfncCCADmK03+mdOQ2s="; };
+      vendorHash = "sha256-tQkiAVrV1Tjv1VlBJWtfP9vBiiK845EBqM7QvJVsVB8=";
+    });
     systemd.user.timers.paretosecurity-user.timerConfig.OnCalendar = mkDefault [
       ""
       "daily"
