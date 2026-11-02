@@ -43,10 +43,6 @@ in
       src = prev.src.override { hash = "sha256-pQ5p52Tf8MtCasTC4ZyDN3EaJfncCCADmK03+mdOQ2s="; };
       vendorHash = "sha256-tQkiAVrV1Tjv1VlBJWtfP9vBiiK845EBqM7QvJVsVB8=";
     });
-    systemd.user.timers.paretosecurity-user.timerConfig.OnCalendar = mkDefault [
-      ""
-      "daily"
-    ];
 
     systemd.user.services.paretosecurity-link = mkIf (cfg.inviteUrlFile != null) {
       description = "Link device to ParetoSecurity team";
