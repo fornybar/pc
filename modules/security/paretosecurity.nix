@@ -39,8 +39,8 @@ in
   config = mkIf cfg.enable {
     services.paretosecurity.enable = true;
     services.paretosecurity.package = pkgs.paretosecurity.overrideAttrs (prev: {
-      version = "0.3.21";
-      src = prev.src.override { hash = "sha256-pQ5p52Tf8MtCasTC4ZyDN3EaJfncCCADmK03+mdOQ2s="; };
+      version = "0.3.22";
+      src = prev.src.override { hash = "sha256-LNN0rl17pCvosJoftQd5KRDhrjnIntfrSfvkFGKrHKY="; };
       vendorHash = "sha256-tQkiAVrV1Tjv1VlBJWtfP9vBiiK845EBqM7QvJVsVB8=";
     });
 
