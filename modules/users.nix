@@ -75,7 +75,7 @@ in
 
     users.mutableUsers = false;
 
-    security.sudo.wheelNeedsPassword = false;
+    security.sudo.wheelNeedsPassword = mkDefault true;
 
     users.users = mapUsers (
       _: user: {
